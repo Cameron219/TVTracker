@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -34,11 +35,14 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private TVDB_API API = TVDB_API.getInstance();
 
     private ArrayList<AsyncTask> task_queue;
+    private DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        db = new DatabaseHelper(this);
 
         task_queue = new ArrayList<AsyncTask>();
         input_search = (TextView) findViewById(R.id.input_search);
@@ -106,6 +110,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     lp.setMargins(10, 10, 10, 10);
                     cv.setLayoutParams(lp);
                     cv.setRadius(8);
+                    cv.setTag(show);
 
                     LinearLayout poster_layout = new LinearLayout(this);
                     poster_layout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -115,6 +120,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     card_layout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                     card_layout.setOrientation(LinearLayout.VERTICAL);
                     card_layout.setBackgroundColor(0xffffffff);
+
 
                     ImageView img = new ImageView(this);
                     img.setId(show.getInt("id"));
@@ -142,6 +148,19 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     poster_layout.addView(card_layout);
                     cv.addView(poster_layout);
                     layout_results.addView(cv);
+
+                    cv.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                JSONObject show = (JSONObject) v.getTag();
+                                Log.d("CLICK", "ID: " + show.getInt("id"));
+                                Log.d("CLICK", "Series: " + show.getString("seriesName"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
 
                     //TODO: Throttle this, maybe only fetch poster when the ImageView comes into the view.
                     if(!show.isNull("banner") && !show.getString("banner").equals("")) {

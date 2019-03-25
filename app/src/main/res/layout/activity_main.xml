@@ -12,12 +12,6 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/btn_fetch_token"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Fetch Token" />
-
-        <Button
             android:id="@+id/btn_open_search_activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

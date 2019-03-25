@@ -1,9 +1,11 @@
 package uk.ac.abertay.tvtracker.TheTVDB;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import uk.ac.abertay.tvtracker.BuildConfig;
+import uk.ac.abertay.tvtracker.DatabaseHelper;
 import uk.ac.abertay.tvtracker.SearchActivity;
 
 import org.json.JSONException;
@@ -18,7 +20,7 @@ public class TVDB_API implements ResponseInterface {
 
     private String JWT_Token = "";
 
-    private SearchActivity search_activity;
+    private Activity search_activity;
 
     private TVDB_API() {
         fetch_jwt_token();
@@ -65,7 +67,7 @@ public class TVDB_API implements ResponseInterface {
     }
 
     public void show_search_results(Response response) {
-        search_activity.display_results(response);
+        ((SearchActivity) search_activity).display_results(response);
     }
 
     public AsyncTask get_poster(int id, SearchActivity search_actitivy) {
@@ -79,7 +81,7 @@ public class TVDB_API implements ResponseInterface {
 
     @Override
     public void show_poster_results(Poster poster) {
-        search_activity.update_poster(poster);
+        ((SearchActivity) search_activity).update_poster(poster);
     }
 
     public static TVDB_API getInstance() {
