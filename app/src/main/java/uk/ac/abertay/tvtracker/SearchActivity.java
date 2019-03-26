@@ -153,9 +153,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                         @Override
                         public void onClick(View v) {
                             try {
-                                JSONObject show = (JSONObject) v.getTag();
-                                Log.d("CLICK", "ID: " + show.getInt("id"));
-                                Log.d("CLICK", "Series: " + show.getString("seriesName"));
+                                JSONObject show = (JSONObject) v.getTag(); //TODO: Change tag so it just stores the ID
+
+                                if(!db.series_exist(show.getInt("id"))) {
+                                    API.get_series(show.getInt("id"), SearchActivity.this);
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -164,7 +166,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
                     //TODO: Throttle this, maybe only fetch poster when the ImageView comes into the view.
                     if(!show.isNull("banner") && !show.getString("banner").equals("")) {
-                        Log.d("SHOW", "Getting poster for " + show.getString("seriesName"));
                         AsyncTask poster_task = API.get_poster(show.getInt("id"), this);
                         task_queue.add(poster_task);
                     }
@@ -187,6 +188,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         } else {
             img.setImageBitmap(poster.get_bitmap());
         }
+    }
+
+    public void insert_series(JSONObject series) {
+        db.insert_series(series);
     }
 
     @Override

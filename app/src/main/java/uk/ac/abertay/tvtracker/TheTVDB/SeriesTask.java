@@ -2,6 +2,7 @@ package uk.ac.abertay.tvtracker.TheTVDB;
 
 import android.os.AsyncTask;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedWriter;
@@ -13,12 +14,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class SeriesTask extends AsyncTask<String, Void, JSONObject> {
+public class SeriesTask extends AsyncTask<String, Void, Response> {
+    public ResponseInterface callback = null; //TODO: Make private and use setter
     @Override
-    protected JSONObject doInBackground(String... params) {
+    protected Response doInBackground(String... params) {
         URL url;
         HttpURLConnection conn = null;
-        JSONObject output = null;
+        Response resp = new Response();
 
         try {
             url = new URL(params[1]);
@@ -31,9 +33,10 @@ public class SeriesTask extends AsyncTask<String, Void, JSONObject> {
             conn.setRequestProperty("Authorization", "Bearer " + params[0]);
 
             int response_code = conn.getResponseCode();
+            resp.set_response_code(response_code);
 
             if(response_code == 200) {
-                InputStream is = conn.getInputStream();
+                resp.set_response(conn.getInputStream());
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -41,6 +44,15 @@ public class SeriesTask extends AsyncTask<String, Void, JSONObject> {
             e.printStackTrace();
         }
 
-        return output;
+        return resp;
+    }
+
+    protected void onPostExecute(Response response) {
+        try {
+            JSONObject series = new JSONObject(response.get_response());
+            callback.insert_series(series.getJSONObject("data"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -84,6 +84,18 @@ public class TVDB_API implements ResponseInterface {
         ((SearchActivity) search_activity).update_poster(poster);
     }
 
+    public void get_series(int series_id, Activity search_activity) {
+        this.search_activity = search_activity;
+        SeriesTask task = new SeriesTask();
+        task.callback = this;
+        task.execute(JWT_Token, API_URL + "series/" + series_id);
+    }
+
+    @Override
+    public void insert_series(JSONObject series) {
+        ((SearchActivity) search_activity).insert_series(series);
+    }
+
     public static TVDB_API getInstance() {
         if(INSTANCE == null) {
             INSTANCE = new TVDB_API();
