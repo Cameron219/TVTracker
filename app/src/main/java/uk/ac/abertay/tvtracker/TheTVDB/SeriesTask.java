@@ -1,5 +1,6 @@
 package uk.ac.abertay.tvtracker.TheTVDB;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import org.json.JSONException;
@@ -14,8 +15,22 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import uk.ac.abertay.tvtracker.SearchActivity;
+
 public class SeriesTask extends AsyncTask<String, Void, Response> {
     public ResponseInterface callback = null; //TODO: Make private and use setter
+    private ProgressDialog dialog;
+
+    public SeriesTask(SearchActivity activity) {
+        dialog = new ProgressDialog(activity);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        dialog.setMessage("Downloading Series, please wait.");
+        dialog.show();
+    }
+
     @Override
     protected Response doInBackground(String... params) {
         URL url;
@@ -48,6 +63,9 @@ public class SeriesTask extends AsyncTask<String, Void, Response> {
     }
 
     protected void onPostExecute(Response response) {
+        if(dialog.isShowing()) {
+            dialog.dismiss();
+        }
         try {
             JSONObject series = new JSONObject(response.get_response());
             callback.insert_series(series.getJSONObject("data"));

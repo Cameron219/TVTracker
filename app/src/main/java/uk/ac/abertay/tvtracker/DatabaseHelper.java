@@ -21,8 +21,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "tv";
 
     private static final String SERIES_TABLE_NAME = "series";
-    private static final String[] SERIES_COLUMN_NAMES = {"seriesId", "name", "poster", "status", "network", "firstAired", "overview", "lastUpdated", "rating", "imdbId", "siteRating", "slug"};
-    private static final String[] SERIES_COLUMN_TYPES = {"INTEGER", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "INTEGER", "TEXT", "INTEGER", "REAL", "TEXT"};
+    private static final String[] SERIES_COLUMN_NAMES = {"seriesId", "name", "poster", "banner", "status", "network", "firstAired", "overview", "lastUpdated", "rating", "imdbId", "siteRating", "slug"};
+    private static final String[] SERIES_COLUMN_TYPES = {"INTEGER", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "INTEGER", "TEXT", "TEXT", "REAL", "TEXT"};
 
     private TVDB_API API = TVDB_API.getInstance();
 
@@ -58,26 +58,49 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void insert_series(JSONObject series) {
         try {
-            ContentValues row = new ContentValues();
-            row.put("seriesId", series.getInt("id"));
-            row.put("name", series.getString("seriesName"));
-            row.put("poster", series.getString("slug") + ".png");
-            row.put("status", series.getString("status"));
-            row.put("network", series.getString("network"));
-            row.put("firstAired", series.getString("firstAired"));
-            row.put("overview", series.getString("overview"));
-            row.put("lastUpdated", series.getInt("lastUpdated"));
-            row.put("rating", series.getString("rating"));
-            row.put("imdbId", series.getString("imdbId"));
-            row.put("siteRating", series.getDouble("siteRating"));
-            row.put("slug", series.getString("slug"));
+            if(!series_exist(series.getInt("id"))) {
+                ContentValues row = new ContentValues();
+                row.put("seriesId", series.getInt("id"));
+                row.put("name", series.getString("seriesName"));
+                row.put("poster", series.getString("slug") + ".png");
+                row.put("banner", series.getString("banner"));
+                row.put("status", series.getString("status"));
+                row.put("network", series.getString("network"));
+                row.put("firstAired", series.getString("firstAired"));
+                row.put("overview", series.getString("overview"));
+                row.put("lastUpdated", series.getInt("lastUpdated"));
+                row.put("rating", series.getString("rating"));
+                row.put("imdbId", series.getString("imdbId"));
+                row.put("siteRating", series.getDouble("siteRating"));
+                row.put("slug", series.getString("slug"));
 
-            SQLiteDatabase db = this.getWritableDatabase();
-            db.insert(SERIES_TABLE_NAME, null, row);
-            db.close();
+                SQLiteDatabase db = this.getWritableDatabase();
+                db.insert(SERIES_TABLE_NAME, null, row);
+                db.close();
+
+                Log.d("DB", "Added: " + series.getString("seriesName"));
+            } else {
+                Log.d("DB", "Didn't Add Duplicate: " + series.getString("seriesName"));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<Series> get_series_names() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor result = db.query(SERIES_TABLE_NAME, new String[] {"seriesId", "name", "poster"}, null, null, null, null, "name", null);
+
+        ArrayList<Series> series_list = new ArrayList<>();
+
+        for(int i = 0; i < result.getCount(); i++ ) {
+            result.moveToPosition(i);
+            Series series = new Series(result.getInt(0), result.getString(1), result.getString(2));
+            series_list.add(series);
+        }
+
+        return series_list;
     }
 
 

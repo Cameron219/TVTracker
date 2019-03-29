@@ -1,6 +1,7 @@
 package uk.ac.abertay.tvtracker.TheTVDB;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -70,11 +71,11 @@ public class TVDB_API implements ResponseInterface {
         ((SearchActivity) search_activity).display_results(response);
     }
 
-    public AsyncTask get_poster(int id, SearchActivity search_actitivy) {
+    public AsyncTask get_poster(int id, String slug, SearchActivity search_actitivy) {
         this.search_activity = search_actitivy;
         PosterTask task = new PosterTask();
         task.callback = this;
-        task.execute(JWT_Token, API_URL + "series/" + id + "/images/query?keyType=poster", "" + id);
+        task.execute(JWT_Token, API_URL + "series/" + id + "/images/query?keyType=poster", "" + id, slug);
 
         return task;
     }
@@ -86,7 +87,7 @@ public class TVDB_API implements ResponseInterface {
 
     public void get_series(int series_id, Activity search_activity) {
         this.search_activity = search_activity;
-        SeriesTask task = new SeriesTask();
+        SeriesTask task = new SeriesTask((SearchActivity) search_activity);
         task.callback = this;
         task.execute(JWT_Token, API_URL + "series/" + series_id);
     }
@@ -94,6 +95,19 @@ public class TVDB_API implements ResponseInterface {
     @Override
     public void insert_series(JSONObject series) {
         ((SearchActivity) search_activity).insert_series(series);
+    }
+
+    public AsyncTask get_banner(String path, int id, SearchActivity search_actitivy) {
+        this.search_activity = search_actitivy;
+        BannerTask task = new BannerTask();
+        task.callback = this;
+        task.execute(path, "" + id);
+
+        return task;
+    }
+
+    public void show_banner(Banner banner) {
+        ((SearchActivity) search_activity).update_banner(banner);
     }
 
     public static TVDB_API getInstance() {

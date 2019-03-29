@@ -16,5 +16,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Open Search" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/seriesList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/empty_view"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="No series have been added"
+            />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

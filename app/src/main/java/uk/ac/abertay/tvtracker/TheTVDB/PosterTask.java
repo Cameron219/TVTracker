@@ -14,6 +14,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import uk.ac.abertay.tvtracker.FileHandler;
+
 public class PosterTask extends AsyncTask<String, Void, Poster> {
     public ResponseInterface callback = null; //TODO: Make private and use setter
 
@@ -81,6 +83,7 @@ public class PosterTask extends AsyncTask<String, Void, Poster> {
                 InputStream input = conn_post.getInputStream();
                 Bitmap bp = BitmapFactory.decodeStream(input);
                 poster.set_bitmap(bp);
+                FileHandler.save_to_external_storage(bp, params[3]);
                 input.close();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -96,6 +99,6 @@ public class PosterTask extends AsyncTask<String, Void, Poster> {
     }
 
     protected void onPostExecute(Poster poster) {
-        callback.show_poster_results(poster);
+        //callback.show_poster_results(poster);
     }
 }

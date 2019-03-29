@@ -1,5 +1,7 @@
 package uk.ac.abertay.tvtracker.TheTVDB;
 
+import android.graphics.Bitmap;
+
 import org.json.JSONObject;
 
 public interface ResponseInterface {
@@ -7,4 +9,5 @@ public interface ResponseInterface {
     void show_search_results(Response response);
     void show_poster_results(Poster response);
     void insert_series(JSONObject series);
+    void show_banner(Banner banner);
 }
