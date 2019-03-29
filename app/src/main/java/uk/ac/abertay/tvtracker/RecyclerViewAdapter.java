@@ -1,6 +1,7 @@
 package uk.ac.abertay.tvtracker;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -31,7 +32,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         Series series = data.get(position);
         holder.series_name.setText(series.get_name());
-        holder.series_poster.setImageBitmap(series.get_poster());
+        Bitmap bp = series.get_poster();
+        if(bp != null) holder.series_poster.setImageBitmap(series.get_poster());
     }
 
     @Override

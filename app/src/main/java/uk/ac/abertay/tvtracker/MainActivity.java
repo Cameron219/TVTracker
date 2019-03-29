@@ -2,12 +2,20 @@ package uk.ac.abertay.tvtracker;
 
 import android.Manifest;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,12 +26,13 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, RecyclerViewAdapter.ItemClickListener {
     private static final int PERMISSION_REQUEST_CODE = 1;
 
-    private Button btn_open_search_activity;
     private RecyclerViewAdapter adapter;
     private TextView empty_view;
     private RecyclerView recyclerView;
     private ArrayList<Series> series_list;
     private DatabaseHelper db;
+    private DrawerLayout drawer_layout;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +54,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         check_if_empty();
 
-        btn_open_search_activity = (Button) findViewById(R.id.btn_open_search_activity);
-        btn_open_search_activity.setOnClickListener(this);
+        drawer_layout = findViewById(R.id.drawer_layout);
+
+        NavigationView nav_view = findViewById(R.id.nav_view);
+        nav_view.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        menuItem.setChecked(false);
+                        drawer_layout.closeDrawers();
+
+                        switch(menuItem.getItemId()) {
+                            case R.id.nav_search:
+                                open_search_activity();
+                                break;
+                        }
+                        return true;
+                    }
+                }
+        );
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ActionBar action_bar = getSupportActionBar();
+        action_bar.setDisplayHomeAsUpEnabled(true);
+        action_bar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
     }
 
     private void request_permissions() {
@@ -60,9 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_open_search_activity:
-                open_search_activity();
-                break;
+
         }
     }
 
@@ -84,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void check_if_empty() {
+        //TODO: Add button to empty view screen that opens up search page
         if(series_list.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             empty_view.setVisibility(View.VISIBLE);
@@ -96,5 +129,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onItemClick(View view, int position) {
         Toast.makeText(this, "You clicked " + adapter.get_item(position).get_name() + " on row number " + position, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                drawer_layout.openDrawer(GravityCompat.START);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

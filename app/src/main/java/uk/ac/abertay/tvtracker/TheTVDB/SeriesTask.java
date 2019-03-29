@@ -20,6 +20,7 @@ import uk.ac.abertay.tvtracker.SearchActivity;
 public class SeriesTask extends AsyncTask<String, Void, Response> {
     public ResponseInterface callback = null; //TODO: Make private and use setter
     private ProgressDialog dialog;
+    //TODO: Replace with spinner
 
     public SeriesTask(SearchActivity activity) {
         dialog = new ProgressDialog(activity);

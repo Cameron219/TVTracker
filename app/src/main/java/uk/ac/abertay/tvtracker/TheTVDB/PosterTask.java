@@ -18,6 +18,7 @@ import uk.ac.abertay.tvtracker.FileHandler;
 
 public class PosterTask extends AsyncTask<String, Void, Poster> {
     public ResponseInterface callback = null; //TODO: Make private and use setter
+    //TODO: Add a progressdialog for grabbing the poster
 
     @Override
     protected Poster doInBackground(String... params) {
@@ -71,7 +72,6 @@ public class PosterTask extends AsyncTask<String, Void, Poster> {
                         highest_rated = rating.getDouble("average");
                     }
                 }
-                //TODO: Use highest rated poster, rather than the first.
 
                 url = new URL(poster_path);
                 conn_post = (HttpURLConnection) url.openConnection();
