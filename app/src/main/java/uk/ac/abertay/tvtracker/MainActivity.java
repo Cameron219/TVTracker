@@ -3,6 +3,7 @@ package uk.ac.abertay.tvtracker;
 import android.Manifest;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DatabaseHelper db;
     private DrawerLayout drawer_layout;
     private Toolbar toolbar;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         action_bar.setDisplayHomeAsUpEnabled(true);
         action_bar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(this);
     }
 
     private void request_permissions() {
@@ -94,13 +98,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
+            case R.id.fab:
+                open_search_activity();
+                break;
         }
     }
 
     @Override
     public void onResume() {
-        Log.d("RESUME", "Activity has resumed");
         super.onResume();
         series_list.clear();
         ArrayList<Series> new_list = db.get_series_names();
@@ -128,7 +133,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(this, "You clicked " + adapter.get_item(position).get_name() + " on row number " + position, Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "You clicked " + adapter.get_item(position).get_name() + "\n" + adapter.get_item(position).get_id(), Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(this, SeriesActivity.class);
+        intent.putExtra("series_id", adapter.get_item(position).get_id());
+        startActivity(intent);
     }
 
     @Override

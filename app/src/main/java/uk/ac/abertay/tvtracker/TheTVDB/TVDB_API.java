@@ -9,6 +9,7 @@ import uk.ac.abertay.tvtracker.BuildConfig;
 import uk.ac.abertay.tvtracker.DatabaseHelper;
 import uk.ac.abertay.tvtracker.SearchActivity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -95,6 +96,17 @@ public class TVDB_API implements ResponseInterface {
     @Override
     public void insert_series(JSONObject series) {
         ((SearchActivity) search_activity).insert_series(series);
+    }
+
+    public void get_episodes(int series_id, Activity search_activity) {
+        this.search_activity = search_activity;
+        EpisodeTask task = new EpisodeTask();
+        task.callback = this;
+        task.execute(JWT_Token, API_URL + "series/" + series_id + "/episodes");
+    }
+
+    public void insert_episodes(JSONArray data) {
+        ((SearchActivity) search_activity).insert_episodes(data);
     }
 
     public AsyncTask get_banner(String path, int id, SearchActivity search_actitivy) {

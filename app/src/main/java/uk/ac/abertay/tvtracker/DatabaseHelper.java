@@ -24,6 +24,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String[] SERIES_COLUMN_NAMES = {"seriesId", "name", "poster", "banner", "status", "network", "firstAired", "overview", "lastUpdated", "rating", "imdbId", "siteRating", "slug"};
     private static final String[] SERIES_COLUMN_TYPES = {"INTEGER", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "INTEGER", "TEXT", "TEXT", "REAL", "TEXT"};
 
+    private static final String EPISODE_TABLE_NAME = "episode";
+    private static final String[] EPISODE_COLUMN_NAMES = {"episodeId", "seriesId", "season", "episode", "name", "aired", "overview", "lastUpdated", "fileName", "imdbId", "siteRating", "watched"};
+    private static final String[] EPISODE_COLUMN_TYPES = {"INTEGER", "INTEGER", "INTEGER", "INTEGER", "TEXT", "TEXT", "TEXT", "INTEGER", "TEXT", "TEXT", "REAL", "INTEGER"};
+
     private TVDB_API API = TVDB_API.getInstance();
 
     public DatabaseHelper(Context context) {
@@ -37,6 +41,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contacts_table_create += SERIES_COLUMN_NAMES[i] + " " + SERIES_COLUMN_TYPES[i] + (i < SERIES_COLUMN_NAMES.length - 1 ? "," : ");");
         }
         db.execSQL(contacts_table_create);
+
+        String episodes_table_create = "CREATE TABLE " + EPISODE_TABLE_NAME + " (";
+        for(int i = 0; i < EPISODE_COLUMN_NAMES.length; i++ ) {
+            episodes_table_create += EPISODE_COLUMN_NAMES[i] + " " + EPISODE_COLUMN_TYPES[i] + (i < EPISODE_COLUMN_NAMES.length - 1 ? "," : ");");
+        }
+        db.execSQL(episodes_table_create);
     }
 
     @Override
@@ -87,6 +97,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void insert_episode(JSONObject episode) {
+        try {
+            if(!episode_exist(episode.getInt("id"))) {
+                ContentValues row = new ContentValues();
+                row.put("episodeId", episode.getInt("id"));
+                row.put("seriesId", episode.getInt("seriesId"));
+                row.put("season", episode.getInt("airedSeason"));
+                row.put("episode", episode.getInt("airedEpisodeNumber"));
+                row.put("name", episode.getString("episodeName"));
+                row.put("aired", episode.getString("firstAired"));
+                row.put("overview", episode.getString("overview"));
+                row.put("lastUpdated", episode.getInt("lastUpdated"));
+                row.put("filename", episode.getString("filename"));
+                row.put("imdbId", episode.getString("imdbId"));
+                row.put("siteRating", episode.getDouble("siteRating"));
+                row.put("watched", 0);
+
+                SQLiteDatabase db = this.getWritableDatabase();
+                db.insert(EPISODE_TABLE_NAME, null, row);
+                db.close();
+
+                Log.d("DB", "Added: S" + episode.getInt("airedSeason") + "E" + episode.getInt("airedEpisodeNumber"));
+            } else {
+                Log.d("DB", "Didn't Add Duplicate: S" + episode.getInt("airedSeason") + "E" + episode.getInt("airedEpisodeNumber"));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean episode_exist(int episode_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT seriesId, name FROM " + EPISODE_TABLE_NAME + " WHERE seriesId = ?";
+        Cursor cursor = db.rawQuery(query, new String[] {"" + episode_id});
+
+        int episode_count = cursor.getCount();
+        cursor.close();
+        db.close();
+
+        return episode_count > 0;
+    }
+
     public ArrayList<Series> get_series_names() {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -100,8 +152,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             series_list.add(series);
         }
 
+        result.close();
+        db.close();
+
         return series_list;
     }
 
+    public Series get_series(int series_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Series series = null;
 
+        Cursor result = db.query(SERIES_TABLE_NAME, null, "seriesId = ?", new String[] {"" + series_id}, null, null, null, null);
+        result.moveToFirst();
+        if(result.getCount() > 0) {
+            series = new Series(result);
+        }
+        result.close();
+        db.close();
+        return series;
+    }
 }

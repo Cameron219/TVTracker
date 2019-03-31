@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".SeriesActivity">
+
+    <item
+        android:id="@+id/series_delete"
+        android:orderInCategory="300"
+        android:title="Delete"
+        android:tooltipText="Delete"
+        android:icon="@drawable/ic_delete"
+        app:showAsAction="ifRoom"></item>
+    <item
+        android:id="@+id/series_mark_as_watched"
+        android:orderInCategory="300"
+        android:title="Mark as watched"
+        android:tooltipText="Mark as watched"
+        android:icon="@drawable/ic_check_all"
+        app:showAsAction="ifRoom"
+        ></item>
+</menu>

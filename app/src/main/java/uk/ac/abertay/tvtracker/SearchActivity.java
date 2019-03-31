@@ -1,5 +1,6 @@
 package uk.ac.abertay.tvtracker;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -40,6 +41,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private ScrollView scroll_view;
     private LinearLayout layout_results;
     private TVDB_API API = TVDB_API.getInstance();
+    int series_id = -1;
 
     private ArrayList<AsyncTask> task_queue;
     private DatabaseHelper db;
@@ -176,8 +178,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                                 ((Button) v).setEnabled(false);
 
                                 if(!db.series_exist(show.getInt("id"))) {
+                                    series_id = show.getInt("id");
                                     API.get_series(show.getInt("id"), SearchActivity.this);
                                     API.get_poster(show.getInt("id"), show.getString("slug"), SearchActivity.this);
+                                    API.get_episodes(show.getInt("id"), SearchActivity.this);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -297,6 +301,22 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     public void insert_series(JSONObject series) {
         db.insert_series(series);
+    }
+
+    public void insert_episodes(JSONArray data) {
+        for(int i = 0; i < data.length(); i++ ) {
+            try {
+                JSONObject episode = data.getJSONObject(i);
+                db.insert_episode(episode);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if(series_id > 0) {
+            Intent intent = new Intent(this, SeriesActivity.class);
+            intent.putExtra("series_id", series_id);
+            startActivity(intent);
+        }
     }
 
     public void update_banner(Banner banner) {

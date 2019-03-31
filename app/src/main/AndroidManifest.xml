@@ -22,7 +22,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".SearchActivity" />
-        <activity android:name=".SeriesActivity"></activity>
+        <activity android:name=".SeriesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="uk.ac.abertay.tvtracker.MainActivity"/>
+        </activity>
     </application>
 
 </manifest>
