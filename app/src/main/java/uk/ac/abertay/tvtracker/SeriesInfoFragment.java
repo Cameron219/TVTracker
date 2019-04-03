@@ -36,15 +36,21 @@ public class SeriesInfoFragment extends Fragment {
         Bundle args = getArguments();
 
         this.series_id = args.getInt("series_id");
+        Series series = new Series(series_id);
+        series.set_name(args.getString("name"));
+        series.set_poster(args.getString("poster"));
+        series.set_status(args.getString("status"));
+        series.set_network(args.getString("network"));
+        series.set_first_aired(args.getString("first_aired"));
+        series.set_content_rating(args.getString("content_rating"));
+        series.set_site_rating(args.getDouble("site_rating"));
+        series.set_overview(args.getString("overview"));
 
-        db = new DatabaseHelper(getActivity());
 
         info_layout = view.findViewById(R.id.info_layout);
         poster = view.findViewById(R.id.series_poster);
         overview = view.findViewById(R.id.series_overview);
         overview.setMovementMethod(new ScrollingMovementMethod());
-
-        series = db.get_series(series_id);
 
         if(series != null) {
             //getSupportActionBar().setTitle(series.get_name()); TODO: Fix this, allow fragment to talk to activity

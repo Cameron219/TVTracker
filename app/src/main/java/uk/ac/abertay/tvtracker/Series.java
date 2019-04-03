@@ -2,22 +2,26 @@ package uk.ac.abertay.tvtracker;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.Bundle;
+
+import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 
 
-public class Series {
+public class Series implements Serializable {
     private int id;
-    private String name;
-    private String poster;
-    private String banner;
-    private String status;
-    private String network;
-    private String first_aired;
-    private String overview;
+    private String name = "";
+    private String poster = "";
+    private String banner = "";
+    private String status = "";
+    private String network = "";
+    private String first_aired = "";
+    private String overview = "";
     private int last_updated;
-    private String content_rating;
-    private String imdb_id;
+    private String content_rating = "";
+    private String imdb_id = "";
     private double site_rating;
-    private String slug;
+    private String slug = "";
 
     Series(Cursor data) {
         this.id = data.getInt(0);
@@ -46,6 +50,58 @@ public class Series {
         this.name = name;
         this.overview = overview;
         this.poster = poster;
+    }
+
+    Series(int id) {
+        this.id = id;
+    }
+
+    public void set_name(String name) {
+        this.name = name;
+    }
+
+    public void set_poster(String poster) {
+        this.poster = poster;
+    }
+
+    public void set_banner(String banner) {
+        this.banner = banner;
+    }
+
+    public void set_status(String status) {
+        this.status = status;
+    }
+
+    public void set_network(String network) {
+        this.network = network;
+    }
+
+    public void set_first_aired(String first_aired) {
+        this.first_aired = first_aired;
+    }
+
+    public void set_overview(String overview) {
+        this.overview = overview;
+    }
+
+    public void set_last_updated(int last_updated) {
+        this.last_updated = last_updated;
+    }
+
+    public void set_content_rating(String content_rating) {
+        this.content_rating = content_rating;
+    }
+
+    public void set_imdb_id(String imdb_id) {
+        this.imdb_id = imdb_id;
+    }
+
+    public void set_site_rating(double site_rating) {
+        this.site_rating = site_rating;
+    }
+
+    public void set_slug(String slug) {
+        this.slug = slug;
     }
 
     public int get_id() {

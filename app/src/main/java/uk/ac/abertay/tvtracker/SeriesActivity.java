@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.LinearGradient;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.design.widget.TabItem;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,6 +32,9 @@ public class SeriesActivity extends AppCompatActivity {
     private LinearLayout info_layout;
     private ViewPager view_pager;
     private ViewPagerAdapter adapter;
+    private TabLayout tab_layout;
+    private TabItem tab_series;
+    private TabItem tab_season;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +48,39 @@ public class SeriesActivity extends AppCompatActivity {
 
         int series_id = data.getInt("series_id");
 
+        db = new DatabaseHelper(this);
+        series = db.get_series(series_id);
+
+        tab_layout = findViewById(R.id.tab_layout);
+        tab_series = findViewById(R.id.tab_series);
+        tab_season = findViewById(R.id.tab_season);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(series.get_name());
 
         view_pager = findViewById(R.id.pager);
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(), series_id);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(), series);
         view_pager.setAdapter(adapter);
+        view_pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tab_layout));
+
+        tab_layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                view_pager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
 
     }
@@ -76,7 +107,7 @@ public class SeriesActivity extends AppCompatActivity {
     private void confirm_delete() {
         new AlertDialog.Builder(this)
                 .setTitle("Confirm Delete")
-                .setMessage("Do you really want to delete?")
+                .setMessage("Do you really want to delete " + series.get_name() + "?")
                 .setIcon(R.drawable.ic_delete)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -94,7 +125,7 @@ public class SeriesActivity extends AppCompatActivity {
     private void confirm_mark_as_watched() {
         new AlertDialog.Builder(this)
                 .setTitle("Confirm mark as watched")
-                .setMessage("Do you really want to mark all episodes as watched?")
+                .setMessage("Do you really want to mark all episodes of " + series.get_name() + " as watched?")
                 .setIcon(R.drawable.ic_check_all)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

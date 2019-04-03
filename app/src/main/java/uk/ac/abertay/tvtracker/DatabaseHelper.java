@@ -158,6 +158,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return series_list;
     }
 
+    public ArrayList<Season> get_seasons(int series_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<Season> seasons = new ArrayList<>();
+        HashMap<Integer, ArrayList<Episode>> episodes = new HashMap<>();
+
+        Cursor result = db.query(EPISODE_TABLE_NAME, null, "seriesId = ?", new String[] {"" + series_id}, null, null, null);
+
+        //TODO: Change this, rather hacky and can probably be done much better
+        for(int i = 0; i < result.getCount(); i++) {
+            result.moveToPosition(i);
+            Episode episode = new Episode(result);
+            if(!episodes.containsKey(episode.get_season_number())) {
+                episodes.put(episode.get_season_number(), new ArrayList<Episode>());
+            }
+            episodes.get(episode.get_season_number()).add(episode);
+        }
+
+        int season_number = 1;
+        while(episodes.containsKey(season_number)) {
+            Season season = new Season(episodes.get(season_number), season_number);
+            seasons.add(season);
+            season_number++;
+        }
+
+        return seasons;
+    }
+
     public Series get_series(int series_id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Series series = null;
