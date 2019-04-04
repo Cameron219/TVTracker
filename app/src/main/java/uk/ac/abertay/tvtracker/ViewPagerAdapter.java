@@ -46,4 +46,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return 2;
     }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
 }

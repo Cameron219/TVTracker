@@ -5,12 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,6 +100,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void insert_episodes(JSONArray episodes) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sql = "INSERT INTO " + EPISODE_TABLE_NAME + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        SQLiteStatement statement = db.compileStatement(sql);
+        db.beginTransaction();
+        try {
+            //ContentValues row = new ContentValues();
+            for(int i = 0; i < episodes.length(); i++ ) {
+                statement.clearBindings();
+                try {
+                    JSONObject episode = episodes.getJSONObject(i);
+                    statement.bindLong(1, episode.getInt("id"));
+                    statement.bindLong(2, episode.getInt("seriesId"));
+                    statement.bindLong(3, episode.getInt("airedSeason"));
+                    statement.bindLong(4, episode.getInt("airedEpisodeNumber"));
+                    statement.bindString(5, episode.getString("episodeName"));
+                    statement.bindString(6, episode.getString("firstAired"));
+                    statement.bindString(7, episode.getString("overview"));
+                    statement.bindLong(8, episode.getInt("lastUpdated"));
+                    statement.bindString(9, episode.getString("filename"));
+                    statement.bindString(10, episode.getString("imdbId"));
+                    statement.bindDouble(11, episode.getDouble("siteRating"));
+                    statement.bindLong(12, 0);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                statement.execute();
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+    }
+
     public void insert_episode(JSONObject episode) {
         try {
             if(!episode_exist(episode.getInt("id"))) {
@@ -161,27 +199,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<Season> get_seasons(int series_id) {
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<Season> seasons = new ArrayList<>();
-        HashMap<Integer, ArrayList<Episode>> episodes = new HashMap<>();
 
         Cursor result = db.query(EPISODE_TABLE_NAME, null, "seriesId = ?", new String[] {"" + series_id}, null, null, null);
 
         //TODO: Change this, rather hacky and can probably be done much better
         for(int i = 0; i < result.getCount(); i++) {
             result.moveToPosition(i);
+            int season_index = -1;
             Episode episode = new Episode(result);
-            if(!episodes.containsKey(episode.get_season_number())) {
-                episodes.put(episode.get_season_number(), new ArrayList<Episode>());
+            for(int j = 0; j < seasons.size(); j++) {
+                if(seasons.get(j).get_season_number() == episode.get_season_number()) {
+                    season_index = j;
+                    break;
+                }
             }
-            episodes.get(episode.get_season_number()).add(episode);
+            if(season_index == -1) {
+                Season season = new Season(episode.get_season_number());
+                seasons.add(season);
+                season_index = seasons.size() - 1;
+            }
+            seasons.get(season_index).add_episode(episode);
         }
+        result.close();
+        db.close();
 
-        int season_number = 1;
-        while(episodes.containsKey(season_number)) {
-            Season season = new Season(episodes.get(season_number), season_number);
+        Collections.sort(seasons);
+        if(seasons.size() > 0 && seasons.get(0).get_season_number() == 0) {
+            Season season = seasons.get(0);
+            seasons.remove(0);
             seasons.add(season);
-            season_number++;
         }
-
         return seasons;
     }
 
@@ -197,5 +244,46 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         result.close();
         db.close();
         return series;
+    }
+
+    public ArrayList<Episode> get_episodes(int series_id, int season_num) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<Episode> episodes = new ArrayList<>();
+
+        Cursor result = db.query(EPISODE_TABLE_NAME, null, "seriesId = ? AND season = ?", new String[] {"" + series_id, "" + season_num}, null, null, "episode", null);
+        for(int i = 0; i < result.getCount(); i++) {
+            result.moveToPosition(i);
+            Episode ep = new Episode(result);
+            episodes.add(ep);
+        }
+        result.close();
+        db.close();
+
+        return episodes;
+    }
+
+    public void mark_all_as_watched(int series_id, boolean watched) {
+        mark_all_as_watched(series_id, -1, watched);
+    }
+
+    public void mark_all_as_watched(int series_id, int season_num, boolean watched) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ContentValues content = new ContentValues();
+        content.put("watched", watched ? 1 : 0);
+
+        if(season_num == -1) {
+            db.update(EPISODE_TABLE_NAME, content, "seriesId = ? ", new String[] {"" + series_id});
+        } else {
+            db.update(EPISODE_TABLE_NAME, content, "seriesId = ? AND season = ?", new String[] {"" + series_id, "" + season_num});
+        }
+        db.close();
+    }
+
+    public void delete_series(int series_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(EPISODE_TABLE_NAME, "seriesId = ?", new String[] {"" + series_id});
+        db.delete(SERIES_TABLE_NAME, "seriesId = ?", new String[] {"" + series_id});
+        db.close();
     }
 }

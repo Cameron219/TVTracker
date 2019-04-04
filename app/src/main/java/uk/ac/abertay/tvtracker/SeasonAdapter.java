@@ -7,6 +7,9 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,9 +31,12 @@ public class SeasonAdapter extends RecyclerView.Adapter<SeasonAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         Season season = seasons.get(position);
-        holder.season_number.setText("Season " + season.get_season_number());
+        holder.season_number.setText(season.get_season_number() == 0 ? "Special Episodes" : "Season " + season.get_season_number());
+        holder.episode_count.setText(season.get_number_of_watched_episodes() + "/" + season.get_number_of_episodes() + " episodes watched.");
+        double percentage = ((double) season.get_number_of_watched_episodes() / (double) season.get_number_of_episodes()) * 100;
+        holder.progress_bar.setProgress((int) percentage);
     }
 
     @Override
@@ -40,10 +46,14 @@ public class SeasonAdapter extends RecyclerView.Adapter<SeasonAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView season_number;
+        TextView episode_count;
+        ProgressBar progress_bar;
 
         public ViewHolder(View item_view) {
             super(item_view);
-            season_number = itemView.findViewById(R.id.season_numner);
+            season_number = item_view.findViewById(R.id.season_numner);
+            episode_count = item_view.findViewById(R.id.episode_count);
+            progress_bar = item_view.findViewById(R.id.progress_bar);
             item_view.setOnClickListener(this);
         }
 

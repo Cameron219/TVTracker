@@ -49,6 +49,8 @@ public class TokenTask extends AsyncTask<String, Void, Response> {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            conn.disconnect();
         }
 
         return resp;

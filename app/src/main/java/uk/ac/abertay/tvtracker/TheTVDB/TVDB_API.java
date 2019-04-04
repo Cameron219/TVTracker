@@ -8,6 +8,7 @@ import android.util.Log;
 import uk.ac.abertay.tvtracker.BuildConfig;
 import uk.ac.abertay.tvtracker.DatabaseHelper;
 import uk.ac.abertay.tvtracker.SearchActivity;
+import uk.ac.abertay.tvtracker.SeriesActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,7 +23,8 @@ public class TVDB_API implements ResponseInterface {
 
     private String JWT_Token = "";
 
-    private Activity search_activity;
+    private SearchActivity search_activity;
+    private SeriesActivity series_activity;
 
     private TVDB_API() {
         fetch_jwt_token();
@@ -86,7 +88,7 @@ public class TVDB_API implements ResponseInterface {
         ((SearchActivity) search_activity).update_poster(poster);
     }
 
-    public void get_series(int series_id, Activity search_activity) {
+    public void get_series(int series_id, SearchActivity search_activity) {
         this.search_activity = search_activity;
         SeriesTask task = new SeriesTask((SearchActivity) search_activity);
         task.callback = this;
@@ -98,15 +100,15 @@ public class TVDB_API implements ResponseInterface {
         ((SearchActivity) search_activity).insert_series(series);
     }
 
-    public void get_episodes(int series_id, Activity search_activity) {
-        this.search_activity = search_activity;
+    public void get_episodes(int series_id, SeriesActivity series_activity) {
+        this.series_activity = series_activity;
         EpisodeTask task = new EpisodeTask();
         task.callback = this;
         task.execute(JWT_Token, API_URL + "series/" + series_id + "/episodes");
     }
 
     public void insert_episodes(JSONArray data) {
-        ((SearchActivity) search_activity).insert_episodes(data);
+        series_activity.insert_episodes(data);
     }
 
     public AsyncTask get_banner(String path, int id, SearchActivity search_actitivy) {

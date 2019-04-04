@@ -17,20 +17,18 @@ public class FileHandler {
     public static void save_to_external_storage(Bitmap bitmap, String slug) {
         check_folders();
         File file = new File(path + "/poster", slug + ".png");
-        if(!file.exists()) {
-            try {
-                file.createNewFile();
-                FileOutputStream out = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                out.flush();
-                out.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if(file.exists()) file.delete();
+        try {
+            file.createNewFile();
+            FileOutputStream out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        Log.d("BP", "Saved " + slug + " to " + path);
     }
 
     public static Bitmap load_from_external_storage(String name) {
@@ -38,10 +36,6 @@ public class FileHandler {
         File file = new File(b_path);
 
         if (file.exists()) {
-//            BitmapFactory.Options options = new BitmapFactory.Options();
-//            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//            Bitmap bitmap = BitmapFactory.decodeFile(b_path, options);
-
             return BitmapFactory.decodeFile(b_path);
         } else return null;
     }

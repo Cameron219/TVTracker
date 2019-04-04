@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.graphics.drawable.DrawableWrapper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -40,6 +41,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private Button btn_search;
     private ScrollView scroll_view;
     private LinearLayout layout_results;
+    private Toolbar toolbar;
     private TVDB_API API = TVDB_API.getInstance();
     int series_id = -1;
 
@@ -51,7 +53,14 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Search");
+
         db = new DatabaseHelper(this);
+
+
 
         task_queue = new ArrayList<AsyncTask>();
         input_search = (TextView) findViewById(R.id.input_search);
@@ -111,8 +120,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
                 for(int i = 0; i < data.length(); i++) {
                     JSONObject show = (JSONObject) data.get(i);
-                    //Log.d("RESULT", "Name: " + show.getString("seriesName"));
-                    //Log.d("RESULT", "Desc: " + show.getString("overview"));
 
                     CardView cv = new CardView(this);
                     LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -128,8 +135,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     ImageView img = new ImageView(this);
                     img.setId(show.getInt("id"));
                     img.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                    //img.setBackgroundColor(0xff000000);
-                    //img.setImageResource(R.drawable.blank_banner);
                     img.setAdjustViewBounds(true);
                     img.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     card_layout.addView(img);
@@ -137,7 +142,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                     TextView tv_name = new TextView(this);
                     tv_name.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
                     tv_name.setText(show.getString("seriesName"));
-                    //tv_name.setBackgroundColor(0xffffffff);
                     tv_name.setTextColor(0xff000000);
                     tv_name.setTextSize(26);
                     tv_name.setPadding(20, 10, 10, 10);
@@ -145,7 +149,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
                     TextView tv_desc = new TextView(this);
                     tv_desc.setText(show.isNull("overview") ? "No description available" : show.getString("overview"));
-//                    tv_desc.setBackgroundColor(0xffffffff);
                     tv_desc.setTextColor(0xff888888);
                     tv_desc.setPadding(20, 10, 10, 10);
                     tv_desc.setMaxHeight(500);
@@ -174,14 +177,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                         public void onClick(View v) {
                             try {
                                 JSONObject show = (JSONObject) v.getTag(); //TODO: Change tag so it just stores the ID
-                                ((Button) v).setText("Added");
-                                ((Button) v).setEnabled(false);
+                                ((Button) v).setVisibility(View.INVISIBLE);
 
                                 if(!db.series_exist(show.getInt("id"))) {
                                     series_id = show.getInt("id");
-                                    API.get_series(show.getInt("id"), SearchActivity.this);
                                     API.get_poster(show.getInt("id"), show.getString("slug"), SearchActivity.this);
-                                    API.get_episodes(show.getInt("id"), SearchActivity.this);
+                                    API.get_series(show.getInt("id"), SearchActivity.this);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -192,85 +193,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
                     cv.addView(card_layout);
                     layout_results.addView(cv);
-
-                    /*CardView cv = new CardView(this);
-                    LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    lp.setMargins(10, 10, 10, 10);
-                    cv.setLayoutParams(lp);
-                    cv.setRadius(8);
-                    cv.setOnTouchListener(new View.OnTouchListener() {
-                        @Override
-                        public boolean onTouch(View v, MotionEvent event) {
-                            if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                                v.setBackgroundColor(0x55FFFFFF);
-                            } else {
-                                v.setBackgroundColor(0xFFFFFFFF);
-                            }
-
-                            return false;
-                        }
-                    });
-                    cv.setTag(show);
-
-                    LinearLayout poster_layout = new LinearLayout(this);
-                    poster_layout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    poster_layout.setOrientation(LinearLayout.HORIZONTAL);
-
-                    LinearLayout card_layout = new LinearLayout(this);
-                    card_layout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    card_layout.setOrientation(LinearLayout.VERTICAL);
-//                    card_layout.setBackgroundColor(0xffffffff);
-
-
-                    ImageView img = new ImageView(this);
-                    img.setId(show.getInt("id"));
-                    img.setLayoutParams(new LayoutParams(340, 500));
-//                    img.setBackgroundColor(0xff000000);
-                    img.setImageResource(R.drawable.poster_blank);
-                    poster_layout.addView(img);
-
-                    TextView tv_name = new TextView(this);
-                    tv_name.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-                    tv_name.setText(show.getString("seriesName"));
-//                    tv_name.setBackgroundColor(0xffffffff);
-                    tv_name.setTextColor(0xff000000);
-                    tv_name.setTextSize(20);
-                    tv_name.setPadding(20, 10, 10, 10);
-                    card_layout.addView(tv_name);
-
-                    TextView tv_desc = new TextView(this);
-                    tv_desc.setText(show.isNull("overview") ? "No description available" : show.getString("overview"));
-//                    tv_desc.setBackgroundColor(0xffffffff);
-                    tv_desc.setTextColor(0xff888888);
-                    tv_desc.setPadding(20, 10, 10, 10);
-                    card_layout.addView(tv_desc);
-
-
-                    poster_layout.addView(card_layout);
-                    cv.addView(poster_layout);
-                    layout_results.addView(cv);
-
-                    cv.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            try {
-                                JSONObject show = (JSONObject) v.getTag(); //TODO: Change tag so it just stores the ID
-
-                                if(!db.series_exist(show.getInt("id"))) {
-                                    API.get_series(show.getInt("id"), SearchActivity.this);
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });*/
-
-                    //TODO: Throttle this, maybe only fetch poster when the ImageView comes into the view.
-//                    if(!show.isNull("banner") && !show.getString("banner").equals("")) {
-//                    if(i < 5) {
-//                        AsyncTask poster_task = API.get_poster(show.getInt("id"), this);
-//                        task_queue.add(poster_task);
-//                    }
 
                     if(!show.isNull("banner") && !show.getString("banner").equals("")) {
                         AsyncTask banner_task = API.get_banner("https://www.thetvdb.com/banners/" + show.getString("banner"), show.getInt("id"), this);
@@ -301,20 +223,10 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     public void insert_series(JSONObject series) {
         db.insert_series(series);
-    }
-
-    public void insert_episodes(JSONArray data) {
-        for(int i = 0; i < data.length(); i++ ) {
-            try {
-                JSONObject episode = data.getJSONObject(i);
-                db.insert_episode(episode);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
         if(series_id > 0) {
             Intent intent = new Intent(this, SeriesActivity.class);
             intent.putExtra("series_id", series_id);
+            intent.putExtra("fetch_episodes", true);
             startActivity(intent);
         }
     }

@@ -9,6 +9,7 @@ import android.graphics.LinearGradient;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +24,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+
+import uk.ac.abertay.tvtracker.TheTVDB.TVDB_API;
+
 public class SeriesActivity extends AppCompatActivity {
     private Series series;
     private ImageView poster;
@@ -35,6 +40,7 @@ public class SeriesActivity extends AppCompatActivity {
     private TabLayout tab_layout;
     private TabItem tab_series;
     private TabItem tab_season;
+    private TVDB_API API = TVDB_API.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,11 @@ public class SeriesActivity extends AppCompatActivity {
         Bundle data = intent.getExtras();
 
         int series_id = data.getInt("series_id");
+
+        if(intent.hasExtra("fetch_episodes")) {
+            Toast.makeText(this, "Fetching episode information", Toast.LENGTH_LONG).show();
+            API.get_episodes(series_id, this);
+        }
 
         db = new DatabaseHelper(this);
         series = db.get_series(series_id);
@@ -100,8 +111,16 @@ public class SeriesActivity extends AppCompatActivity {
             case R.id.series_mark_as_watched:
                 confirm_mark_as_watched();
                 return true;
+            case R.id.series_mark_as_unwatched:
+                confirm_mark_as_unwatched();
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void insert_episodes(JSONArray data) {
+        db.insert_episodes(data);
+        adapter.notifyDataSetChanged();
     }
 
     private void confirm_delete() {
@@ -119,7 +138,9 @@ public class SeriesActivity extends AppCompatActivity {
 
     private void delete() {
         //TODO: Implement delete
-        Toast.makeText(SeriesActivity.this, "Deleted", Toast.LENGTH_LONG).show();
+//        Toast.makeText(SeriesActivity.this, "Deleted", Toast.LENGTH_LONG).show();
+        db.delete_series(series.get_id());
+        finish();
     }
 
     private void confirm_mark_as_watched() {
@@ -130,14 +151,30 @@ public class SeriesActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mark_as_watched();
+                        update_watch_status(true);
                     }
                 })
                 .setNegativeButton("No", null).show();
     }
 
-    private void mark_as_watched() {
+    private void confirm_mark_as_unwatched() {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm mark as unwatched")
+                .setMessage("Do you really want to mark all episodes of " + series.get_name() + " as unwatched?")
+                .setIcon(R.drawable.ic_check_all)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        update_watch_status(false);
+                    }
+                })
+                .setNegativeButton("No", null).show();
+    }
+
+    private void update_watch_status(boolean watched) {
         //TODO: Implement mark as watched
-        Toast.makeText(this, "Marked as watched", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Marked as watched", Toast.LENGTH_LONG).show();
+        db.mark_all_as_watched(series.get_id(), watched);
+        adapter.notifyDataSetChanged();
     }
 }

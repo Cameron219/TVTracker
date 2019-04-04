@@ -5,6 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".SeriesSeasonFragment">
 
+    <ProgressBar
+        android:id="@+id/spinner"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_seasons"
         android:scrollbars="vertical"
