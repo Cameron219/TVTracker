@@ -2,28 +2,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".SeriesActivity">
+    tools:context=".EpisodeListActivity">
 
     <item
-        android:id="@+id/series_delete"
+        android:id="@+id/season_mark_as_watched"
         android:orderInCategory="300"
-        android:title="Delete"
-        android:tooltipText="Delete"
-        android:icon="@drawable/ic_delete"
-        app:showAsAction="ifRoom"></item>
-    <item
-        android:id="@+id/series_mark_as_watched"
-        android:orderInCategory="300"
-        android:title="Mark as watched"
+        android:title="Mark as Watched"
         android:tooltipText="Mark as Watched"
         android:icon="@drawable/ic_check_all"
-        app:showAsAction="never"
-        ></item>
+        app:showAsAction="never"/>
+
     <item
-        android:id="@+id/series_mark_as_unwatched"
+        android:id="@+id/season_mark_as_unwatched"
         android:orderInCategory="300"
         android:title="Mark as Unwatched"
         android:tooltipText="Mark as Unwatched"
         android:icon="@drawable/ic_check_all"
-        app:showAsAction="never"></item>
+        app:showAsAction="never"/>
+
 </menu>

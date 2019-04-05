@@ -3,24 +3,18 @@ package uk.ac.abertay.tvtracker;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
-public class EpisodeActivity extends AppCompatActivity implements EpisodeAdapter.ItemClickListener {
+public class EpisodeActivity extends AppCompatActivity {
     private int series_id;
-    private int season_num;
+    private int episode_id;
+    private String series_name;
+    private Episode episode;
     private DatabaseHelper db;
-    private RecyclerView recycler_view;
-    private EpisodeAdapter adapter;
-    private RecyclerView.LayoutManager layout_manager;
-    private ArrayList<Episode> episodes;
-
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,29 +23,35 @@ public class EpisodeActivity extends AppCompatActivity implements EpisodeAdapter
 
         Intent intent = getIntent();
         Bundle args = intent.getExtras();
-
         series_id = args.getInt("series_id");
-        season_num = args.getInt("season_num");
+        episode_id = args.getInt("episode_id");
+        series_name = args.getString("series_name");
 
-        LinearLayout layout = findViewById(R.id.linear_layout);
         db = new DatabaseHelper(this);
+        episode = db.get_episode(episode_id);
 
-        episodes = db.get_episodes(series_id, season_num);
-
-        recycler_view = findViewById(R.id.recycler_episodes);
-        recycler_view.setHasFixedSize(true);
-
-        layout_manager = new LinearLayoutManager(this);
-        recycler_view.setLayoutManager(layout_manager);
-
-        adapter = new EpisodeAdapter(this, episodes);
-        adapter.set_click_listener(this);
-        recycler_view.setAdapter(adapter);
+        if(episode != null) {
+            toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setTitle(series_name);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            String sn = "Season " + (episode.get_season_number() < 10 ? "0" + episode.get_season_number() : episode.get_season_number());
+            String en = "Episode " + (episode.get_episode_number() < 10 ? "0" + episode.get_episode_number() : episode.get_episode_number());
+            getSupportActionBar().setSubtitle(episode.get_season_number() == 0 ? "Special " + en : sn + " " + en);
+        } else {
+            Toast.makeText(this, "Episode doesn't exist", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     @Override
-    public void onItemClick(View view, int position) {
-        Episode episode = adapter.get_item(position);
-        Toast.makeText(this, "Episode " + episode.get_name(), Toast.LENGTH_LONG).show();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

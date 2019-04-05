@@ -61,7 +61,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.ViewHold
     }
 
     public void set_click_listener(ItemClickListener item_click_listener) {
-        this.click_listener = click_listener;
+        this.click_listener = item_click_listener;
     }
 
     public interface ItemClickListener {

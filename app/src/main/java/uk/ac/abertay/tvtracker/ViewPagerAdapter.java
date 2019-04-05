@@ -36,6 +36,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             SeriesSeasonFragment ssf = new SeriesSeasonFragment();
             Bundle bundle = new Bundle();
             bundle.putInt("series_id", series.get_id());
+            bundle.putString("series_name", series.get_name());
             ssf.setArguments(bundle);
             return ssf;
         }

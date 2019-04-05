@@ -237,8 +237,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Series series = null;
 
         Cursor result = db.query(SERIES_TABLE_NAME, null, "seriesId = ?", new String[] {"" + series_id}, null, null, null, null);
-        result.moveToFirst();
         if(result.getCount() > 0) {
+            result.moveToFirst();
             series = new Series(result);
         }
         result.close();
@@ -260,6 +260,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return episodes;
+    }
+
+    public Episode get_episode(int episode_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Episode episode = null;
+
+        Cursor result = db.query(EPISODE_TABLE_NAME, null, "episodeId = ?", new String[] {"" + episode_id}, null, null, null, null);
+        if(result.getCount() > 0) {
+            result.moveToFirst();
+            episode = new Episode(result);
+        }
+        result.close();
+        db.close();
+        return episode;
+
     }
 
     public void mark_all_as_watched(int series_id, boolean watched) {

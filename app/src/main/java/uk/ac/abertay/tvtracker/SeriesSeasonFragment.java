@@ -20,6 +20,7 @@ import java.util.ArrayList;
  */
 public class SeriesSeasonFragment extends Fragment implements SeasonAdapter.ItemClickListener {
     private int series_id;
+    private String series_name;
     private RecyclerView recycler_view;
     private ProgressBar spinner;
     private SeasonAdapter adapter;
@@ -39,6 +40,8 @@ public class SeriesSeasonFragment extends Fragment implements SeasonAdapter.Item
 
         Bundle args = getArguments();
         this.series_id = args.getInt("series_id");
+        this.series_name = args.getString("series_name");
+
 
         db = new DatabaseHelper(getActivity());
 
@@ -64,8 +67,9 @@ public class SeriesSeasonFragment extends Fragment implements SeasonAdapter.Item
     public void onItemClick(View view, int position) {
         Season season = adapter.get_item(position);
         Toast.makeText(getActivity(),"Season " + season.get_season_number(), Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(getActivity(), EpisodeActivity.class);
+        Intent intent = new Intent(getActivity(), EpisodeListActivity.class);
         intent.putExtra("series_id", series_id);
+        intent.putExtra("series_name", series_name);
         intent.putExtra("season_num", season.get_season_number());
         startActivity(intent);
     }

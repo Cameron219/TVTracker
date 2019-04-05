@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SearchActivity" >
+        <activity android:name=".SearchActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uk.ac.abertay.tvtracker.MainActivity" />
@@ -32,9 +32,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uk.ac.abertay.tvtracker.MainActivity" />
         </activity>
-        <activity android:name=".EpisodeActivity">
-
-        </activity>
+        <activity android:name=".EpisodeListActivity"></activity>
+        <activity android:name=".EpisodeActivity"></activity>
     </application>
 
 </manifest>

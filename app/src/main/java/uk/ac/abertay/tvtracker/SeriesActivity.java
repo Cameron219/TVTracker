@@ -47,8 +47,6 @@ public class SeriesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series);
 
-        //TODO: Pass series into fragments, as toolbar needs names
-
         Intent intent = getIntent();
         Bundle data = intent.getExtras();
 
