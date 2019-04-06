@@ -21,7 +21,7 @@
             <ImageView
                 android:id="@+id/series_poster"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
                 app:srcCompat="@drawable/poster_blank"

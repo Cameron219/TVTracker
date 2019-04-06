@@ -126,6 +126,19 @@ public class EpisodeListActivity extends AppCompatActivity implements EpisodeAda
         //TODO: Implement mark as watched
         //Toast.makeText(this, "Marked as watched", Toast.LENGTH_LONG).show();
         db.mark_all_as_watched(series_id, season_num, watched);
+        update_view();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        update_view();
+    }
+
+    private void update_view() {
+        episodes.clear();
+        ArrayList<Episode> new_list = db.get_episodes(series_id, season_num);
+        episodes.addAll(new_list);
         adapter.notifyDataSetChanged();
     }
 

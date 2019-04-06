@@ -66,7 +66,6 @@ public class SeriesSeasonFragment extends Fragment implements SeasonAdapter.Item
     @Override
     public void onItemClick(View view, int position) {
         Season season = adapter.get_item(position);
-        Toast.makeText(getActivity(),"Season " + season.get_season_number(), Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getActivity(), EpisodeListActivity.class);
         intent.putExtra("series_id", series_id);
         intent.putExtra("series_name", series_name);

@@ -14,7 +14,7 @@
     <item
         android:id="@+id/series_mark_as_watched"
         android:orderInCategory="300"
-        android:title="Mark as watched"
+        android:title="Mark as Watched"
         android:tooltipText="Mark as Watched"
         android:icon="@drawable/ic_check_all"
         app:showAsAction="never"

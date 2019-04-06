@@ -12,11 +12,13 @@ import java.io.IOException;
 
 public class FileHandler {
     private static final String FOLDER_NAME = "TVTracker";
-    private static String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + FOLDER_NAME;
+    private static String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + FOLDER_NAME + "/";
 
-    public static void save_to_external_storage(Bitmap bitmap, String slug) {
-        check_folders();
-        File file = new File(path + "/poster", slug + ".png");
+    public static void save_to_external_storage(Bitmap bitmap, String name) {
+        //check_folders();
+        File file = new File(path, name);
+        File folder = file.getParentFile();
+        if(!folder.isDirectory()) folder.mkdirs();
         if(file.exists()) file.delete();
         try {
             file.createNewFile();
@@ -38,19 +40,5 @@ public class FileHandler {
         if (file.exists()) {
             return BitmapFactory.decodeFile(b_path);
         } else return null;
-    }
-
-    private static void check_folders() {
-        File root_folder = new File(path);
-        if(!root_folder.isDirectory()) {
-            if(root_folder.mkdir()) Log.d("FILE", "mkdir: " + root_folder.getAbsolutePath());
-            else Log.d("FILE", "!mkdir: " + root_folder.getAbsolutePath());
-        }
-
-        File poster_folder = new File(path + "/poster");
-        if(!poster_folder.isDirectory()) {
-            if(poster_folder.mkdir()) Log.d("FILE", "mkdir: " + poster_folder.getAbsolutePath());
-            else Log.d("FILE", "!mkdir: " + poster_folder.getAbsolutePath());
-        }
     }
 }

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import uk.ac.abertay.tvtracker.BuildConfig;
 import uk.ac.abertay.tvtracker.DatabaseHelper;
+import uk.ac.abertay.tvtracker.EpisodeActivity;
 import uk.ac.abertay.tvtracker.SearchActivity;
 import uk.ac.abertay.tvtracker.SeriesActivity;
 
@@ -25,6 +26,7 @@ public class TVDB_API implements ResponseInterface {
 
     private SearchActivity search_activity;
     private SeriesActivity series_activity;
+    private EpisodeActivity episode_activity;
 
     private TVDB_API() {
         fetch_jwt_token();
@@ -122,6 +124,17 @@ public class TVDB_API implements ResponseInterface {
 
     public void show_banner(Banner banner) {
         ((SearchActivity) search_activity).update_banner(banner);
+    }
+
+    public void get_image(String filename, EpisodeActivity episode_activity) {
+        this.episode_activity = episode_activity;
+        EpisodeImageTask task = new EpisodeImageTask();
+        task.callback = this;
+        task.execute("https://www.thetvdb.com/banners/" + filename, filename);
+    }
+
+    public void show_image(Bitmap image) {
+        episode_activity.update_image(image);
     }
 
     public static TVDB_API getInstance() {

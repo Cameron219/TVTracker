@@ -28,10 +28,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String[] SERIES_COLUMN_TYPES = {"INTEGER", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "TEXT", "INTEGER", "TEXT", "TEXT", "REAL", "TEXT"};
 
     private static final String EPISODE_TABLE_NAME = "episode";
-    private static final String[] EPISODE_COLUMN_NAMES = {"episodeId", "seriesId", "season", "episode", "name", "aired", "overview", "lastUpdated", "fileName", "imdbId", "siteRating", "watched"};
-    private static final String[] EPISODE_COLUMN_TYPES = {"INTEGER", "INTEGER", "INTEGER", "INTEGER", "TEXT", "TEXT", "TEXT", "INTEGER", "TEXT", "TEXT", "REAL", "INTEGER"};
+    private static final String[] EPISODE_COLUMN_NAMES = {"episodeId", "seriesId", "season", "episode", "name", "aired", "overview", "lastUpdated", "fileName", "imdbId", "siteRating", "watched", "notification"};
+    private static final String[] EPISODE_COLUMN_TYPES = {"INTEGER", "INTEGER", "INTEGER", "INTEGER", "TEXT", "TEXT", "TEXT", "INTEGER", "TEXT", "TEXT", "REAL", "INTEGER", "INTEGER"};
 
-    private TVDB_API API = TVDB_API.getInstance();
+    //private TVDB_API API = TVDB_API.getInstance();
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -102,7 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void insert_episodes(JSONArray episodes) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String sql = "INSERT INTO " + EPISODE_TABLE_NAME + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO " + EPISODE_TABLE_NAME + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         SQLiteStatement statement = db.compileStatement(sql);
         db.beginTransaction();
         try {
@@ -123,6 +123,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     statement.bindString(10, episode.getString("imdbId"));
                     statement.bindDouble(11, episode.getDouble("siteRating"));
                     statement.bindLong(12, 0);
+                    statement.bindLong(13, 0);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -151,6 +152,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 row.put("imdbId", episode.getString("imdbId"));
                 row.put("siteRating", episode.getDouble("siteRating"));
                 row.put("watched", 0);
+                row.put("notification", 0);
 
                 SQLiteDatabase db = this.getWritableDatabase();
                 db.insert(EPISODE_TABLE_NAME, null, row);
@@ -187,6 +189,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         for(int i = 0; i < result.getCount(); i++ ) {
             result.moveToPosition(i);
             Series series = new Series(result.getInt(0), result.getString(1), result.getString(2));
+            Episode next = get_next_episode(result.getInt(0));
+            series.set_next_episode(next);
             series_list.add(series);
         }
 
@@ -262,6 +266,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return episodes;
     }
 
+    public Episode get_next_episode(int series_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Episode episode = null;
+
+        Cursor result = db.query(EPISODE_TABLE_NAME, null, "seriesId = ? AND watched = ? AND season > ?", new String[] {"" + series_id, "" + 0, "" + 0}, null, null, "date(aired)", null);
+        Log.d("SQL", "Count: " + result.getCount());
+        if(result.getCount() > 0) {
+            result.moveToFirst();
+            episode = new Episode(result);
+        }
+        result.close();
+        return episode;
+    }
+
     public Episode get_episode(int episode_id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Episode episode = null;
@@ -292,6 +310,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else {
             db.update(EPISODE_TABLE_NAME, content, "seriesId = ? AND season = ?", new String[] {"" + series_id, "" + season_num});
         }
+        db.close();
+    }
+
+    public void mark_episode_as_watched(int episode_id, boolean watched) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ContentValues content = new ContentValues();
+        content.put("watched", watched ? 1 : 0);
+
+        db.update(EPISODE_TABLE_NAME, content, "episodeId = ?", new String[] {"" + episode_id});
         db.close();
     }
 

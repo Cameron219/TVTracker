@@ -1,6 +1,7 @@
 package uk.ac.abertay.tvtracker;
 
 import android.database.Cursor;
+import android.graphics.Bitmap;
 
 public class Episode {
     private int episode_id;
@@ -15,6 +16,7 @@ public class Episode {
     private String imdb_id;
     private double site_rating;
     private boolean watched;
+    private boolean notification;
 
     Episode(Cursor result) {
         this.episode_id = result.getInt(0);
@@ -29,6 +31,7 @@ public class Episode {
         this.imdb_id = result.getString(9);
         this.site_rating = result.getDouble(10);
         this.watched = result.getInt(11) == 1;
+        this.notification = result.getInt(12) == 1;
     }
 
     public int get_episode_id() {
@@ -77,5 +80,13 @@ public class Episode {
 
     public boolean is_watched() {
         return watched;
+    }
+
+    public boolean is_notification() {
+        return notification;
+    }
+
+    public Bitmap get_image() {
+        return FileHandler.load_from_external_storage(file_name);
     }
 }

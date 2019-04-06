@@ -83,7 +83,7 @@ public class PosterTask extends AsyncTask<String, Void, Poster> {
                 InputStream input = conn_post.getInputStream();
                 Bitmap bp = BitmapFactory.decodeStream(input);
                 poster.set_bitmap(bp);
-                FileHandler.save_to_external_storage(bp, params[3]);
+                FileHandler.save_to_external_storage(bp, "/poster/" + params[3] + ".png");
                 input.close();
             } catch (JSONException e) {
                 e.printStackTrace();

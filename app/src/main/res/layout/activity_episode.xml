@@ -6,82 +6,90 @@
     android:layout_height="match_parent"
     tools:context=".EpisodeActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
-
-        <TextView
-            android:id="@+id/episode_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Winter Is Coming"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
-            android:paddingHorizontal="10dp"
-            />
-
-        <TextView
-            android:id="@+id/episode_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2010-12-05"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
-            android:paddingHorizontal="10dp"
-            />
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="10dp">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                android:src="@drawable/episode_test"
-                app:layout_constraintDimensionRatio="16:9"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-        </android.support.constraint.ConstraintLayout>
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="10dp">
-            <CheckBox
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
+
+            <TextView
+                android:id="@+id/episode_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Winter Is Coming"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
+                android:paddingHorizontal="10dp"
+                />
+
+            <TextView
+                android:id="@+id/episode_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2010-12-05"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                android:paddingHorizontal="10dp"
+                />
+
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Watched"
-                android:textSize="16dp"
-                android:layout_weight="1"
-                android:checked="true"/>
-            <CheckBox
+                android:paddingHorizontal="10dp">
+
+                <ImageView
+                    android:id="@+id/episode_image"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintDimensionRatio="16:9"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+            </android.support.constraint.ConstraintLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Notification"
-                android:textSize="16dp"
-                android:checked="false"/>
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp">
+                <CheckBox
+                    android:id="@+id/episode_watched"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Watched"
+                    android:textSize="16dp"
+                    android:layout_weight="1"
+                    android:checked="true"/>
+                <CheckBox
+                    android:id="@+id/episode_notification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Notification"
+                    android:textSize="16dp"
+                    android:checked="false"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/episode_overview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                />
         </LinearLayout>
-
-
-
-
-
-    </LinearLayout>
-
+    </ScrollView>
 
 
 </android.support.constraint.ConstraintLayout>

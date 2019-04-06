@@ -12,4 +12,5 @@ public interface ResponseInterface {
     void insert_series(JSONObject series);
     void show_banner(Banner banner);
     void insert_episodes(JSONArray data);
+    void show_image(Bitmap image);
 }

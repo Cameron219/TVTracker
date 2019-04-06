@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,8 +29,9 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Episode episode = episodes.get(position);
-        holder.episode_name.setText((position + 1) + ". " + episode.get_name());
+        holder.episode_name.setText((position + 1) + ". " + (episode.get_name().equals("null") ? "TBA" : episode.get_name()));
         holder.episode_date.setText(episode.get_aired());
+        holder.episode_check.setVisibility(episode.is_watched() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -40,11 +42,13 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView episode_name;
         TextView episode_date;
+        ImageView episode_check;
 
         public ViewHolder(View item_view) {
             super(item_view);
             episode_name = item_view.findViewById(R.id.episode_name);
             episode_date = item_view.findViewById(R.id.episode_date);
+            episode_check = item_view.findViewById(R.id.episode_check);
             item_view.setOnClickListener(this);
         }
 

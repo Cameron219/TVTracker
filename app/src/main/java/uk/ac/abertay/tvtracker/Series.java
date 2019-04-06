@@ -22,6 +22,7 @@ public class Series implements Serializable {
     private String imdb_id = "";
     private double site_rating;
     private String slug = "";
+    private Episode next_episode = null;
 
     Series(Cursor data) {
         this.id = data.getInt(0);
@@ -162,5 +163,13 @@ public class Series implements Serializable {
 
     public String get_slug() {
         return this.slug;
+    }
+
+    public Episode get_next_episode() {
+        return next_episode;
+    }
+
+    public void set_next_episode(Episode episode) {
+        this.next_episode = episode;
     }
 }
