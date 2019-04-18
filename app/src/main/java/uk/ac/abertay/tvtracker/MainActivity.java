@@ -2,6 +2,7 @@ package uk.ac.abertay.tvtracker;
 
 import android.Manifest;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, RecyclerViewAdapter.ItemClickListener {
+    private static final String GITHUB_SOURCE_URL = "https://github.com/Cameron219/TVTracker";
     private static final int PERMISSION_REQUEST_CODE = 1;
 
     private RecyclerViewAdapter adapter;
@@ -70,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             case R.id.nav_search:
                                 open_search_activity();
                                 break;
+                            case R.id.nav_source:
+                                open_source();
+                                break;
                         }
                         return true;
                     }
@@ -89,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void request_permissions() {
         if(ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(this, "External Storage permissions are required to store posters. Please allow this", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "This app requires storage permission. Please allow it", Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         }
@@ -147,5 +152,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void open_source() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(GITHUB_SOURCE_URL));
+        startActivity(intent);
     }
 }

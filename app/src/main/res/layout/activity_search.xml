@@ -39,21 +39,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Search" />
+
         </LinearLayout>
 
-        <ScrollView
-            android:id="@+id/scroll_results"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_search"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            />
 
-            <LinearLayout
-                android:id="@+id/layout_results"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp">
-
-            </LinearLayout>
-        </ScrollView>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

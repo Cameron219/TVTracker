@@ -30,12 +30,12 @@ public class EpisodeImageTask extends AsyncTask<String, Void, Bitmap> {
             conn.setReadTimeout(7_000);
             conn.connect();
 
-            //if(conn.getResponseCode() == 200) {
+            if(conn.getResponseCode() == 200) {
                 InputStream input = conn.getInputStream();
                 image = BitmapFactory.decodeStream(input);
                 FileHandler.save_to_external_storage(image, params[1]);
                 input.close();
-            //}
+            }
 
 
         } catch (MalformedURLException e) {

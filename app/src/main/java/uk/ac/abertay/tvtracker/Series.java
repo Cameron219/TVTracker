@@ -4,6 +4,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
@@ -22,6 +25,8 @@ public class Series implements Serializable {
     private String imdb_id = "";
     private double site_rating;
     private String slug = "";
+    private String airsTime = "";
+    private String runtime = "";
     private Episode next_episode = null;
 
     Series(Cursor data) {
@@ -38,6 +43,22 @@ public class Series implements Serializable {
         this.imdb_id = data.getString(10);
         this.site_rating = data.getDouble(11);
         this.slug = data.getString(12);
+        this.airsTime = data.getString(13);
+        this.runtime = data.getString(14);
+    }
+
+    Series(JSONObject data) {
+        try {
+            this.id = data.getInt("id");
+            this.name = data.getString("seriesName");
+            this.overview = data.getString("overview");
+            this.banner = data.getString("banner");
+            this.status = data.getString("status");
+            this.network = data.getString("network");
+            this.slug = data.getString("slug");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     Series(int id, String name, String poster) {
@@ -103,6 +124,22 @@ public class Series implements Serializable {
 
     public void set_slug(String slug) {
         this.slug = slug;
+    }
+
+    public void set_airstime(String airsTime) {
+        this.airsTime = airsTime;
+    }
+
+    public void set_runtime(String runtime) {
+        this.runtime = runtime;
+    }
+
+    public String get_airstime() {
+        return this.airsTime;
+    }
+
+    public String get_runtime() {
+        return this.runtime;
     }
 
     public int get_id() {

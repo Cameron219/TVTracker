@@ -123,7 +123,6 @@ public class EpisodeListActivity extends AppCompatActivity implements EpisodeAda
                 .setNegativeButton("No", null).show();
     }
     private void update_watch_status(boolean watched) {
-        //TODO: Implement mark as watched
         //Toast.makeText(this, "Marked as watched", Toast.LENGTH_LONG).show();
         db.mark_all_as_watched(series_id, season_num, watched);
         update_view();

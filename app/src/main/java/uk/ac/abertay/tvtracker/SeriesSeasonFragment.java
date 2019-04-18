@@ -45,6 +45,7 @@ public class SeriesSeasonFragment extends Fragment implements SeasonAdapter.Item
 
         db = new DatabaseHelper(getActivity());
 
+        //TODO: Handle the fact that their might be 0 seasons (add a textview with that message). Only if they're not currently being fetched though.
         seasons = db.get_seasons(series_id);
 
         recycler_view = view.findViewById(R.id.recycler_seasons);

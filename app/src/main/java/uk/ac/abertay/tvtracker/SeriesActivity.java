@@ -60,6 +60,12 @@ public class SeriesActivity extends AppCompatActivity {
         db = new DatabaseHelper(this);
         series = db.get_series(series_id);
 
+        if(series == null) {
+            Toast.makeText(this, "No series found. Was it deleted? Please try again.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
         tab_layout = findViewById(R.id.tab_layout);
         tab_series = findViewById(R.id.tab_series);
         tab_season = findViewById(R.id.tab_season);
@@ -117,8 +123,11 @@ public class SeriesActivity extends AppCompatActivity {
     }
 
     public void insert_episodes(JSONArray data) {
-        db.insert_episodes(data);
-        adapter.notifyDataSetChanged();
+        if(db.insert_episodes(data)) {
+            adapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(this, "Error adding episodes. Please check internet and try again", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void confirm_delete() {
@@ -135,7 +144,6 @@ public class SeriesActivity extends AppCompatActivity {
     }
 
     private void delete() {
-        //TODO: Implement delete
 //        Toast.makeText(SeriesActivity.this, "Deleted", Toast.LENGTH_LONG).show();
         db.delete_series(series.get_id());
         finish();
@@ -170,7 +178,6 @@ public class SeriesActivity extends AppCompatActivity {
     }
 
     private void update_watch_status(boolean watched) {
-        //TODO: Implement mark as watched
         //Toast.makeText(this, "Marked as watched", Toast.LENGTH_LONG).show();
         db.mark_all_as_watched(series.get_id(), watched);
         adapter.notifyDataSetChanged();

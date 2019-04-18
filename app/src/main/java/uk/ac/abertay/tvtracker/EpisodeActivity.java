@@ -26,9 +26,9 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
 
     private TextView episode_name;
     private TextView episode_date;
+    private TextView episode_network;
     private ImageView episode_image;
     private CheckBox episode_watched;
-    private CheckBox episode_notification;
     private TextView episode_overview;
 
     private TVDB_API API = TVDB_API.getInstance();
@@ -40,13 +40,12 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
 
         episode_name = findViewById(R.id.episode_name);
         episode_date = findViewById(R.id.episode_date);
+        episode_network = findViewById(R.id.episode_network);
         episode_image = findViewById(R.id.episode_image);
         episode_watched = findViewById(R.id.episode_watched);
-        episode_notification = findViewById(R.id.episode_notification);
         episode_overview = findViewById(R.id.episode_overview);
 
         episode_watched.setOnCheckedChangeListener(this);
-        episode_notification.setOnCheckedChangeListener(this);
 
         Intent intent = getIntent();
         Bundle args = intent.getExtras();
@@ -80,9 +79,9 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
 
     private void show_episode_details() {
         episode_name.setText(episode.get_name().equals("null") ? "TBA" : episode.get_name());
-        episode_date.setText(episode.get_aired());
+        episode_date.setText(episode.get_aired() + " " + (series.get_airstime().equals("null") ? "" : series.get_airstime()));
+        episode_network.setText(series.get_network());
         episode_watched.setChecked(episode.is_watched());
-        episode_notification.setChecked(episode.is_notification());
         if(episode.get_overview().equals("") || episode.get_overview().equals("null")) {
             episode_overview.setText("No description available at the moment.");
         } else {
@@ -114,19 +113,12 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
             case R.id.episode_watched:
                 toggle_watch_status(isChecked);
                 break;
-            case R.id.episode_notification:
-                toggle_notification(isChecked);
-                break;
         }
     }
 
     private void toggle_watch_status(boolean checked) {
         db.mark_episode_as_watched(episode_id, checked);
         Toast.makeText(this, "Episode marked as " + (checked ? "" : "un") + "watched", Toast.LENGTH_LONG).show();
-
-    }
-
-    private void toggle_notification(boolean checked) {
 
     }
 

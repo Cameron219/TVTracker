@@ -58,7 +58,7 @@ public class TokenTask extends AsyncTask<String, Void, Response> {
 
     protected void onPostExecute(Response response) {
         // TODO: Return raw token (as opposed to the entire response)
-        callback.fetch_result(response.get_response_code(), response.get_response());
+        callback.set_token(response);
     }
 }
 
