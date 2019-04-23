@@ -85,6 +85,7 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
             episode_overview.setText(episode.get_overview());
         }
 
+        //TODO: Insert placeholder image when no image is available
         Bitmap image = episode.get_image();
         if(image == null) { // No local file exists, fetch image from TVDB
             API.get_image(episode.get_file_name(), this);

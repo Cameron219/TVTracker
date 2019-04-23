@@ -1,6 +1,7 @@
 package uk.ac.abertay.tvtracker;
 
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
@@ -45,14 +46,16 @@ public class SeriesInfoFragment extends Fragment {
 
 
         info_layout = view.findViewById(R.id.info_layout);
+        //TODO: Insert placeholder image when no poster is available
         ImageView poster = view.findViewById(R.id.series_poster);
         TextView overview = view.findViewById(R.id.series_overview);
         overview.setMovementMethod(new ScrollingMovementMethod());
 
         if(series != null) {
             //getSupportActionBar().setTitle(series.get_name()); TODO: Fix this, allow fragment to talk to activity
-            overview.setText(series.get_overview());
-            poster.setImageBitmap(series.get_poster());
+            overview.setText(series.get_overview().equals("null") ? getActivity().getString(R.string.no_description) : series.get_overview());
+            Bitmap bp = series.get_poster();
+            if(bp != null) poster.setImageBitmap(bp);
             if(!series.get_status().isEmpty()) {
                 add_info("Status", series.get_status());
             }
@@ -75,6 +78,7 @@ public class SeriesInfoFragment extends Fragment {
         return view;
     }
 
+    //TODO: Move this over to XML
     private void add_info(String txt_title, String txt_value) {
         TextView title = new TextView(getActivity());
         title.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
