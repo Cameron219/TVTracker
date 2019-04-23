@@ -6,20 +6,16 @@ import android.os.AsyncTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import uk.ac.abertay.tvtracker.SearchActivity;
 
-public class SeriesTask extends AsyncTask<String, Void, Response> {
+class SeriesTask extends AsyncTask<String, Void, Response> {
     public ResponseInterface callback = null; //TODO: Make private and use setter
-    private ProgressDialog dialog;
+    private final ProgressDialog dialog;
     //TODO: Replace with spinner
 
     public SeriesTask(SearchActivity activity) {
@@ -35,7 +31,7 @@ public class SeriesTask extends AsyncTask<String, Void, Response> {
     @Override
     protected Response doInBackground(String... params) {
         URL url;
-        HttpURLConnection conn = null;
+        HttpURLConnection conn;
         Response resp = new Response();
 
         try {

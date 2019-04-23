@@ -19,9 +19,6 @@ import android.widget.TextView;
 public class SeriesInfoFragment extends Fragment {
     private DatabaseHelper db;
     private LinearLayout info_layout;
-    private ImageView poster;
-    private TextView overview;
-    private int series_id;
     private Series series;
 
 
@@ -35,7 +32,7 @@ public class SeriesInfoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_series_info, container, false);
         Bundle args = getArguments();
 
-        this.series_id = args.getInt("series_id");
+        int series_id = args.getInt("series_id");
         Series series = new Series(series_id);
         series.set_name(args.getString("name"));
         series.set_poster(args.getString("poster"));
@@ -48,8 +45,8 @@ public class SeriesInfoFragment extends Fragment {
 
 
         info_layout = view.findViewById(R.id.info_layout);
-        poster = view.findViewById(R.id.series_poster);
-        overview = view.findViewById(R.id.series_overview);
+        ImageView poster = view.findViewById(R.id.series_poster);
+        TextView overview = view.findViewById(R.id.series_overview);
         overview.setMovementMethod(new ScrollingMovementMethod());
 
         if(series != null) {

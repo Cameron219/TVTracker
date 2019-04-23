@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-public class ViewPagerAdapter extends FragmentPagerAdapter {
-    private Series series;
+class ViewPagerAdapter extends FragmentPagerAdapter {
+    private final Series series;
 
     public ViewPagerAdapter(FragmentManager fm, Series series) {
         super(fm);

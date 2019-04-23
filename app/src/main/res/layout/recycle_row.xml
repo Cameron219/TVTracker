@@ -28,6 +28,7 @@
                 android:adjustViewBounds="true"
                 android:background="@android:color/background_light"
                 android:scaleType="fitStart"
+                android:contentDescription="@string/episode_image"
                 app:srcCompat="@drawable/poster_blank" />
 
             <LinearLayout

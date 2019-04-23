@@ -15,11 +15,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,8 +32,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ArrayList<Series> series_list;
     private DatabaseHelper db;
     private DrawerLayout drawer_layout;
-    private Toolbar toolbar;
-    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,14 +76,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
         );
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar action_bar = getSupportActionBar();
         action_bar.setDisplayHomeAsUpEnabled(true);
         action_bar.setHomeAsUpIndicator(R.drawable.ic_menu);
 
-        fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(this);
     }
 
@@ -102,10 +97,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fab:
-                open_search_activity();
-                break;
+        if(v.getId() == R.id.fab) {
+            open_search_activity();
         }
     }
 
@@ -146,10 +139,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case android.R.id.home:
-                drawer_layout.openDrawer(GravityCompat.START);
-                return true;
+        if(item.getItemId() == android.R.id.home) {
+            drawer_layout.openDrawer(GravityCompat.START);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

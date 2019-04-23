@@ -2,12 +2,10 @@ package uk.ac.abertay.tvtracker;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
 

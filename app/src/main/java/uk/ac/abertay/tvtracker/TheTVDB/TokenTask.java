@@ -9,8 +9,9 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
-public class TokenTask extends AsyncTask<String, Void, Response> {
+class TokenTask extends AsyncTask<String, Void, Response> {
     public ResponseInterface callback = null; //TODO: Make private and use a setter
 
     @Override
@@ -33,7 +34,7 @@ public class TokenTask extends AsyncTask<String, Void, Response> {
             conn.setRequestProperty("Content-type", "application/json");
 
             OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
 
             writer.write(request);
             writer.flush();

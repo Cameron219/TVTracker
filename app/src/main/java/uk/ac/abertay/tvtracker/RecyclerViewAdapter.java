@@ -3,7 +3,6 @@ package uk.ac.abertay.tvtracker;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,8 @@ import android.widget.TextView;
 import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-    private List<Series> data;
-    private LayoutInflater inflater;
+    private final List<Series> data;
+    private final LayoutInflater inflater;
     private ItemClickListener click_listener;
 
     RecyclerViewAdapter(Context context, List<Series> data) {
@@ -36,13 +35,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         if(bp != null) holder.series_poster.setImageBitmap(series.get_poster());
         Episode ep = series.get_next_episode();
         if(ep == null) {
-            holder.series_next_name.setText("No next episode currently.");
+            holder.series_next_name.setText(R.string.no_next_episode);
         } else {
-            String name = ep.get_name().equals("null") ? "TBA" : ep.get_name();
-            String season_text = "S" + (ep.get_season_number() < 10 ? "0" + ep.get_season_number() : "" + ep.get_season_number());
-            String episode_text = "E" + (ep.get_episode_number() < 10 ? "0" + ep.get_episode_number() : "" + ep.get_episode_number());
-
-            holder.series_next_name.setText("Next: " + season_text + episode_text + " - " + name);
+            holder.series_next_name.setText("Next: " + ep.get_season_episode() + " - " + ep.get_name());
             holder.series_next_date.setText(ep.get_aired());
         }
     }
@@ -53,10 +48,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView series_name;
-        ImageView series_poster;
-        TextView series_next_name;
-        TextView series_next_date;
+        final TextView series_name;
+        final ImageView series_poster;
+        final TextView series_next_name;
+        final TextView series_next_date;
 
         ViewHolder(View item_view) {
             super(item_view);

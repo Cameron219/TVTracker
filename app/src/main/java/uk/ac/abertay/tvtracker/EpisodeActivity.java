@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -16,13 +15,11 @@ import android.widget.Toast;
 import uk.ac.abertay.tvtracker.TheTVDB.TVDB_API;
 
 public class EpisodeActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
-    private int series_id;
     private int episode_id;
     private String series_name;
     private Series series;
     private Episode episode;
     private DatabaseHelper db;
-    private Toolbar toolbar;
 
     private TextView episode_name;
     private TextView episode_date;
@@ -31,7 +28,7 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
     private CheckBox episode_watched;
     private TextView episode_overview;
 
-    private TVDB_API API = TVDB_API.getInstance();
+    private final TVDB_API API = TVDB_API.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +46,7 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
 
         Intent intent = getIntent();
         Bundle args = intent.getExtras();
-        series_id = args.getInt("series_id");
+        int series_id = args.getInt("series_id");
         episode_id = args.getInt("episode_id");
         series_name = args.getString("series_name");
 
@@ -67,7 +64,7 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
     }
 
     private void set_up_toolbar() {
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(series_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -78,12 +75,12 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
     }
 
     private void show_episode_details() {
-        episode_name.setText(episode.get_name().equals("null") ? "TBA" : episode.get_name());
+        episode_name.setText(episode.get_name());
         episode_date.setText(episode.get_aired() + " " + (series.get_airstime().equals("null") ? "" : series.get_airstime()));
         episode_network.setText(series.get_network());
         episode_watched.setChecked(episode.is_watched());
         if(episode.get_overview().equals("") || episode.get_overview().equals("null")) {
-            episode_overview.setText("No description available at the moment.");
+            episode_overview.setText(R.string.no_description);
         } else {
             episode_overview.setText(episode.get_overview());
         }
@@ -98,10 +95,8 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
+        if(item.getItemId() == android.R.id.home) {
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -109,10 +104,8 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if(!buttonView.isPressed()) return;
-        switch(buttonView.getId()) {
-            case R.id.episode_watched:
-                toggle_watch_status(isChecked);
-                break;
+        if(buttonView.getId() == R.id.episode_watched) {
+            toggle_watch_status(isChecked);
         }
     }
 

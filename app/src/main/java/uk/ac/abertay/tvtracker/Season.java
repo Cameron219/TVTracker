@@ -1,12 +1,10 @@
 package uk.ac.abertay.tvtracker;
 
-import android.support.annotation.NonNull;
-
 import java.util.ArrayList;
 
 public class Season implements Comparable<Season> {
-    private int season_numner;
-    private ArrayList<Episode> episodes;
+    private final int season_numner;
+    private final ArrayList<Episode> episodes;
 
     Season(int season_numner) {
         episodes = new ArrayList<>();

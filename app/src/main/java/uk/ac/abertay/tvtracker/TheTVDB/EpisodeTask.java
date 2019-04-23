@@ -11,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class EpisodeTask extends AsyncTask<String, Void, JSONArray> {
+class EpisodeTask extends AsyncTask<String, Void, JSONArray> {
     public ResponseInterface callback = null;
 
     @Override

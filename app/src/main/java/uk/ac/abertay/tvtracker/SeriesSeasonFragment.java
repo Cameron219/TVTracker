@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -24,7 +23,6 @@ public class SeriesSeasonFragment extends Fragment implements SeasonAdapter.Item
     private RecyclerView recycler_view;
     private ProgressBar spinner;
     private SeasonAdapter adapter;
-    private RecyclerView.LayoutManager layout_manager;
     private DatabaseHelper db;
     private ArrayList<Season> seasons;
 
@@ -52,7 +50,7 @@ public class SeriesSeasonFragment extends Fragment implements SeasonAdapter.Item
         spinner = view.findViewById(R.id.spinner);
         recycler_view.setHasFixedSize(true);
 
-        layout_manager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layout_manager = new LinearLayoutManager(getActivity());
         recycler_view.setLayoutManager(layout_manager);
 
         adapter = new SeasonAdapter(getActivity(), seasons);

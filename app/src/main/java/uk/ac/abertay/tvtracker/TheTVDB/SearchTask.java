@@ -8,7 +8,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-public class SearchTask extends AsyncTask<String, Void, Response> {
+class SearchTask extends AsyncTask<String, Void, Response> {
     public ResponseInterface callback = null; //TODO: Make private and use setter
 
     @Override

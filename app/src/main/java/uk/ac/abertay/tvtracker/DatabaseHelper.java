@@ -71,7 +71,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * Constructor method. Requires the context (current state of the application)
      * @param context Current context
      */
-    protected DatabaseHelper(Context context) {
+    DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -421,5 +421,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(EPISODE_TABLE_NAME, "seriesId = ?", new String[] {"" + series_id});
         db.delete(SERIES_TABLE_NAME, "seriesId = ?", new String[] {"" + series_id});
         db.close();
+    }
+
+    /**
+     * Returns episodes that air today or later
+     * @param limit Limit number of episodes to return
+     * @return ArrayList of Episodes
+     */
+    public ArrayList<Episode> get_upcoming_episodes(int limit) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<Episode> episodes = new ArrayList<>();
+
+        Cursor result = db.query(EPISODE_TABLE_NAME, null, "season > 0 AND date(aired) >= date('now')", null, null, null, "date(aired)", "" + limit);
+        for(int i = 0; i < result.getCount(); i++) {
+            result.moveToPosition(i);
+            Episode ep = new Episode(result);
+            episodes.add(ep);
+        }
+        result.close();
+        db.close();
+
+        return episodes;
     }
 }

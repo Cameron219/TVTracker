@@ -2,5 +2,25 @@
     <string name="app_name">TVTracker</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="appwidget_title">Upcoming Episodes</string>
+    <string name="search_for_show">Search for show</string>
+    <string name="app_logo">App Logo</string>
+    <string name="series_poster">Series Poster</string>
+    <string name="checkmark">Checkmark</string>
+    <string name="series_image">Series Image</string>
+    <string name="episode_image">Episode Image</string>
+    <string name="watched">Watched</string>
+    <string name="no_series">No series have been added</string>
+    <string name="search">Search</string>
+    <string name="series">Series</string>
+    <string name="seasons">Seasons</string>
+    <string name="home">Home</string>
+    <string name="source">Source</string>
+    <string name="mark_as_watched">Mark as Watched</string>
+    <string name="mark_as_unwatched">Mark as Unwatched</string>
+    <string name="delete">Delete</string>
+    <string name="app_title">TVTracker</string>
+    <string name="no_episodes">No episodes to show</string>
+    <string name="no_description">No description available at the moment.</string>
+    <string name="no_next_episode">No next episode currently.</string>
 </resources>

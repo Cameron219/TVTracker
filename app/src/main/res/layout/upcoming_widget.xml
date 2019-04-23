@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/widget_background"
+    android:padding="@dimen/widget_margin"
+    android:id="@+id/widget_row"
+    >
+
+    <TextView
+        android:id="@+id/widget_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/appwidget_title"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="4dp"
+        android:background="@color/widget_title_background"
+        />
+
+    <ListView
+        android:id="@+id/widget_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:divider="#ccc"
+        android:dividerHeight="1dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/no_episodes"
+        android:color="@android:color/white"
+        android:textSize="42sp"
+        android:id="@+id/widget_no_episode"
+        />
+
+</LinearLayout>

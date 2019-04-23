@@ -7,23 +7,23 @@
     <item
         android:id="@+id/series_delete"
         android:orderInCategory="300"
-        android:title="Delete"
-        android:tooltipText="Delete"
+        android:title="@string/delete"
+        android:tooltipText="@string/delete"
         android:icon="@drawable/ic_delete"
-        app:showAsAction="ifRoom"></item>
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/series_mark_as_watched"
         android:orderInCategory="300"
-        android:title="Mark as Watched"
-        android:tooltipText="Mark as Watched"
+        android:title="@string/mark_as_watched"
+        android:tooltipText="@string/mark_as_watched"
         android:icon="@drawable/ic_check_all"
         app:showAsAction="never"
-        ></item>
+        />
     <item
         android:id="@+id/series_mark_as_unwatched"
         android:orderInCategory="300"
-        android:title="Mark as Unwatched"
-        android:tooltipText="Mark as Unwatched"
+        android:title="@string/mark_as_unwatched"
+        android:tooltipText="@string/mark_as_unwatched"
         android:icon="@drawable/ic_check_all"
-        app:showAsAction="never"></item>
+        app:showAsAction="never"/>
 </menu>

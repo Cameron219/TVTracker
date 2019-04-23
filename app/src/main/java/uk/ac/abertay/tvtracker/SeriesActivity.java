@@ -1,24 +1,16 @@
 package uk.ac.abertay.tvtracker;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.LinearGradient;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,14 +25,10 @@ public class SeriesActivity extends AppCompatActivity {
     private ImageView poster;
     private TextView overview;
     private DatabaseHelper db;
-    private Toolbar toolbar;
     private LinearLayout info_layout;
     private ViewPager view_pager;
     private ViewPagerAdapter adapter;
-    private TabLayout tab_layout;
-    private TabItem tab_series;
-    private TabItem tab_season;
-    private TVDB_API API = TVDB_API.getInstance();
+    private final TVDB_API API = TVDB_API.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +54,10 @@ public class SeriesActivity extends AppCompatActivity {
             return;
         }
 
-        tab_layout = findViewById(R.id.tab_layout);
-        tab_series = findViewById(R.id.tab_series);
-        tab_season = findViewById(R.id.tab_season);
-        toolbar = findViewById(R.id.toolbar);
+        TabLayout tab_layout = findViewById(R.id.tab_layout);
+        TabItem tab_series = findViewById(R.id.tab_series);
+        TabItem tab_season = findViewById(R.id.tab_season);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(series.get_name());

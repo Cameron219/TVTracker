@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -21,11 +20,8 @@ public class EpisodeListActivity extends AppCompatActivity implements EpisodeAda
     private int season_num;
     private String series_name;
     private DatabaseHelper db;
-    private RecyclerView recycler_view;
     private EpisodeAdapter adapter;
-    private RecyclerView.LayoutManager layout_manager;
     private ArrayList<Episode> episodes;
-    private Toolbar toolbar;
 
 
     @Override
@@ -45,17 +41,17 @@ public class EpisodeListActivity extends AppCompatActivity implements EpisodeAda
 
         episodes = db.get_episodes(series_id, season_num);
 
-        recycler_view = findViewById(R.id.recycler_episodes);
+        RecyclerView recycler_view = findViewById(R.id.recycler_episodes);
         recycler_view.setHasFixedSize(true);
 
-        layout_manager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layout_manager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layout_manager);
 
         adapter = new EpisodeAdapter(this, episodes);
         adapter.set_click_listener(this);
         recycler_view.setAdapter(adapter);
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -3,7 +3,6 @@ package uk.ac.abertay.tvtracker;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,7 +11,7 @@ import java.io.IOException;
 
 public class FileHandler {
     private static final String FOLDER_NAME = "TVTracker";
-    private static String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + FOLDER_NAME + "/";
+    private static final String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + FOLDER_NAME + "/";
 
     public static void save_to_external_storage(Bitmap bitmap, String name) {
         //check_folders();

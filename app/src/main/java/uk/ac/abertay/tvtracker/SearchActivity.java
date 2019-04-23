@@ -30,14 +30,10 @@ import uk.ac.abertay.tvtracker.TheTVDB.TVDB_API;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener, View.OnKeyListener, SearchAdapter.ItemClickListener {
     private TextView input_search;
-    private Button btn_search;
-    private RecyclerView recycler_view;
     private SearchAdapter adapter;
-    private RecyclerView.LayoutManager layout_manager;
     private ArrayList<Series> results;
-    private Toolbar toolbar;
-    private TVDB_API API = TVDB_API.getInstance();
-    int series_id = -1;
+    private final TVDB_API API = TVDB_API.getInstance();
+    private int series_id = -1;
 
     private ArrayList<AsyncTask> task_queue;
     private DatabaseHelper db;
@@ -49,16 +45,16 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         results = new ArrayList<>();
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Search");
 
         db = new DatabaseHelper(this);
 
-        recycler_view = findViewById(R.id.recycler_search);
+        RecyclerView recycler_view = findViewById(R.id.recycler_search);
 
-        layout_manager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layout_manager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layout_manager);
 
         adapter = new SearchAdapter(this, results);
@@ -67,7 +63,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         task_queue = new ArrayList<>();
         input_search = findViewById(R.id.input_search);
-        btn_search = findViewById(R.id.btn_search);
+        Button btn_search = findViewById(R.id.btn_search);
 
         btn_search.setOnClickListener(this);
         input_search.setOnKeyListener(this);
@@ -75,10 +71,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_search:
-                search();
-                break;
+        if(v.getId() == R.id.btn_search) {
+            search();
         }
     }
 
@@ -126,10 +120,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 Log.e("JSON", "Unable to parse response");
                 e.printStackTrace();
             }
-        } else {
-//            TextView tv_error = new TextView(this);
-//            tv_error.setText("No results found");
-//            layout_results.addView(tv_error);
         }
     }
 
@@ -160,12 +150,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public boolean onKey(View v, int keyCode, KeyEvent event) {
-        switch(v.getId()) {
-            case R.id.input_search:
-                if(event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    search();
-                    return true;
-                }
+        if(v.getId() == R.id.input_search) {
+            if(event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                search();
+                return true;
+            }
         }
         return false;
     }
@@ -191,7 +180,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    public void add_series(Series series) {
+    private void add_series(Series series) {
         series_id = series.get_id();
         API.get_poster(series.get_id(), series.get_slug());
         API.get_series(series.get_id(), SearchActivity.this);

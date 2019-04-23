@@ -10,14 +10,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class BannerTask extends AsyncTask<String, Void, Banner> {
+class BannerTask extends AsyncTask<String, Void, Banner> {
     public ResponseInterface callback = null; //TODO: Make private and use setter
 
     @Override
     protected Banner doInBackground(String... params) {
         URL url;
-        HttpURLConnection conn = null;
-        Response resp = new Response();
+        HttpURLConnection conn;
         Banner banner = new Banner();
         int show_id = Integer.parseInt(params[1]);
         banner.set_id(show_id);

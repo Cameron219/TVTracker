@@ -16,7 +16,7 @@ import java.net.URL;
 
 import uk.ac.abertay.tvtracker.FileHandler;
 
-public class PosterTask extends AsyncTask<String, Void, Poster> {
+class PosterTask extends AsyncTask<String, Void, Poster> {
     public ResponseInterface callback = null; //TODO: Make private and use setter
     //TODO: Add a progressdialog for grabbing the poster
 
@@ -66,7 +66,7 @@ public class PosterTask extends AsyncTask<String, Void, Poster> {
 
                 for(int i = 0; i < data.length(); i++) {
                     JSONObject p = (JSONObject) data.get(i);
-                    JSONObject rating = (JSONObject) p.getJSONObject("ratingsInfo");
+                    JSONObject rating = p.getJSONObject("ratingsInfo");
                     if (rating.getDouble("average") > highest_rated) {
                         poster_path = "https://www.thetvdb.com/banners/" + p.getString("thumbnail");
                         highest_rated = rating.getDouble("average");

@@ -12,7 +12,7 @@ import java.net.URL;
 
 import uk.ac.abertay.tvtracker.FileHandler;
 
-public class EpisodeImageTask extends AsyncTask<String, Void, Bitmap> {
+class EpisodeImageTask extends AsyncTask<String, Void, Bitmap> {
     public ResponseInterface callback = null;
 
     @Override

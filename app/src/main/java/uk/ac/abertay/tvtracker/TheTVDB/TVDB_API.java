@@ -1,12 +1,10 @@
 package uk.ac.abertay.tvtracker.TheTVDB;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import uk.ac.abertay.tvtracker.BuildConfig;
-import uk.ac.abertay.tvtracker.DatabaseHelper;
 import uk.ac.abertay.tvtracker.EpisodeActivity;
 import uk.ac.abertay.tvtracker.SearchActivity;
 import uk.ac.abertay.tvtracker.SeriesActivity;
@@ -75,7 +73,7 @@ public class TVDB_API implements ResponseInterface {
      * Call the ASyncTask TokenTask, which will return a JWT Token that allows for API requests to be made.
      * This requires the API_KEY, USER_KEY and USERNAME to be set and valid.
      */
-    public void fetch_jwt_token() {
+    private void fetch_jwt_token() {
         TokenTask task = new TokenTask();
         task.callback = this;
         task.execute(API_URL + "login", API_KEY, USER_KEY, USERNAME);
@@ -171,7 +169,7 @@ public class TVDB_API implements ResponseInterface {
      */
     public void get_series(int series_id, SearchActivity search_activity) {
         this.search_activity = search_activity;
-        SeriesTask task = new SeriesTask((SearchActivity) search_activity);
+        SeriesTask task = new SeriesTask(search_activity);
         task.callback = this;
         task.execute(JWT_Token, API_URL + "series/" + series_id);
     }
@@ -183,7 +181,7 @@ public class TVDB_API implements ResponseInterface {
      */
     @Override
     public void insert_series(JSONObject series) {
-        ((SearchActivity) search_activity).insert_series(series);
+        search_activity.insert_series(series);
     }
 
     /**
@@ -228,7 +226,7 @@ public class TVDB_API implements ResponseInterface {
      * @param banner Banner bitmap and series id
      */
     public void show_banner(Banner banner) {
-        ((SearchActivity) search_activity).update_banner(banner);
+        search_activity.update_banner(banner);
     }
 
     /**

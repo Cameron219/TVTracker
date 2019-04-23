@@ -4,19 +4,23 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 
 public class Episode {
-    private int episode_id;
-    private int series_id;
-    private int season_number;
-    private int episode_number;
-    private String name;
-    private String aired;
-    private String overview;
-    private int last_updated;
-    private String file_name;
-    private String imdb_id;
-    private double site_rating;
-    private boolean watched;
+    private final int episode_id;
+    private final int series_id;
+    private final int season_number;
+    private final int episode_number;
+    private final String name;
+    private final String aired;
+    private final String overview;
+    private final int last_updated;
+    private final String file_name;
+    private final String imdb_id;
+    private final double site_rating;
+    private final boolean watched;
 
+    /**
+     * Constructor takes a Cursor from the DatabaseHelper class.
+     * @param result
+     */
     Episode(Cursor result) {
         this.episode_id = result.getInt(0);
         this.series_id = result.getInt(1);
@@ -49,7 +53,7 @@ public class Episode {
     }
 
     public String get_name() {
-        return name;
+        return name.equals("null") ? "TBA" : name;
     }
 
     public String get_aired() {
@@ -82,5 +86,10 @@ public class Episode {
 
     public Bitmap get_image() {
         return FileHandler.load_from_external_storage(file_name);
+    }
+
+    public String get_season_episode() {
+        return "S" + (season_number < 10 ? "0" : "") + season_number +
+                "E" + (episode_number < 10 ? "0" : "") + episode_number;
     }
 }
