@@ -1,6 +1,8 @@
 package uk.ac.abertay.tvtracker.TheTVDB;
 
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,9 +13,44 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-class EpisodeTask extends AsyncTask<String, Void, JSONArray> {
-    public ResponseInterface callback = null;
+import uk.ac.abertay.tvtracker.Episode;
 
+/**
+ * Fetch all episode information about a given series.
+ * Due to API restriction, one API call only returns 100 episodes
+ * This will handle that and continue making API calls for the following episodes
+ * Until there are no more to be fetched.
+ * With shows with a substantial number of episodes, this can take a while to run.
+ */
+class EpisodeTask extends AsyncTask<String, Void, JSONArray> {
+    private ResponseInterface callback = null;
+    private ProgressBar spinner;
+
+    /**
+     * Set the progress bar spinner
+     * @param spinner ProgressBar
+     */
+    public EpisodeTask(ProgressBar spinner) {
+        this.spinner = spinner;
+    }
+
+    /**
+     * Set loading spinner visible while task is running
+     */
+    @Override
+    protected void onPreExecute() {
+        spinner.setVisibility(View.VISIBLE);
+        super.onPreExecute();
+    }
+
+    /**
+     * Async Task that fetches all episode information about a series
+     * Continues to make API calls for more episodes while there is more pages
+     * param[0] = JWT Token for API
+     * param[1] = URL for API call, WITHOUT page number
+     * @param params Parameters
+     * @return JSONArray from API containing episodes
+     */
     @Override
     protected JSONArray doInBackground(String... params) {
         URL url;
@@ -63,12 +100,25 @@ class EpisodeTask extends AsyncTask<String, Void, JSONArray> {
             current_page++;
         } while(current_page <= last_page);
 
-
-
         return data;
     }
 
+    /**
+     * Method called when AsyncTask is finished.
+     * Recieves Episode data, passes it back to callback class (TVDB_API)
+     * Hides the progress bar spinner
+     * @param data Episode Data
+     */
     protected void onPostExecute(JSONArray data) {
+        spinner.setVisibility(View.GONE);
         callback.insert_episodes(data);
+    }
+
+    /**
+     * Set callback class (TVDB_API)
+     * @param callback Callback
+     */
+    public void set_callback(ResponseInterface callback) {
+        this.callback = callback;
     }
 }

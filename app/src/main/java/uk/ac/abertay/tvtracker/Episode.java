@@ -3,6 +3,10 @@ package uk.ac.abertay.tvtracker;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 
+/**
+ * Episode class.
+ * Holds all DB information about a specific episode.
+ */
 public class Episode {
     private final int episode_id;
     private final int series_id;
@@ -36,6 +40,7 @@ public class Episode {
         this.watched = result.getInt(11) == 1;
     }
 
+    // Getters
     public int get_episode_id() {
         return episode_id;
     }
@@ -53,7 +58,7 @@ public class Episode {
     }
 
     public String get_name() {
-        return name.equals("null") ? "TBA" : name;
+        return name.equals("null") || name.isEmpty() ? "TBA" : name;
     }
 
     public String get_aired() {

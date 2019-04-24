@@ -3,6 +3,8 @@ package uk.ac.abertay.tvtracker.TheTVDB;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,20 +18,37 @@ import java.net.URL;
 
 import uk.ac.abertay.tvtracker.FileHandler;
 
-class PosterTask extends AsyncTask<String, Void, Poster> {
-    public ResponseInterface callback = null; //TODO: Make private and use setter
-    //TODO: Add a progressdialog for grabbing the poster
+/**
+ * AsyncTask to fetch the poster image for a series and save it to external storage
+ * Fetches the URL via an API call and makes the corresponding call for downloading the image.
+ */
+class PosterTask extends AsyncTask<String, Void, Void> {
+    ProgressBar spinner;
+
+    public PosterTask(ProgressBar spinner) {
+        this.spinner = spinner;
+    }
 
     @Override
-    protected Poster doInBackground(String... params) {
+    protected void onPreExecute() {
+        spinner.setVisibility(View.VISIBLE);
+        super.onPreExecute();
+    }
+
+    /**
+     * The Async method for PosterTask
+     * params[0] = JWT Token for API Call
+     * params[1] = API URL for poster
+     * @param params Parameters
+     * @return Void (nothing)
+     */
+    @Override
+    protected Void doInBackground(String... params) {
         URL url;
         HttpURLConnection conn = null;
         HttpURLConnection conn_post = null;
         Response resp = new Response();
-        Poster poster = new Poster();
         int response_code = 0;
-        int show_id = Integer.parseInt(params[2]);
-        poster.set_id(show_id);
 
         try {
             url = new URL(params[1]);
@@ -82,7 +101,6 @@ class PosterTask extends AsyncTask<String, Void, Poster> {
 
                 InputStream input = conn_post.getInputStream();
                 Bitmap bp = BitmapFactory.decodeStream(input);
-                poster.set_bitmap(bp);
                 FileHandler.save_to_external_storage(bp, "/poster/" + params[3] + ".png");
                 input.close();
             } catch (JSONException e) {
@@ -95,10 +113,12 @@ class PosterTask extends AsyncTask<String, Void, Poster> {
                 conn_post.disconnect();
             }
         }
-        return poster;
+        return null;
     }
 
-    protected void onPostExecute(Poster poster) {
-        //callback.show_poster_results(poster);
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        spinner.setVisibility(View.GONE);
+        super.onPostExecute(aVoid);
     }
 }

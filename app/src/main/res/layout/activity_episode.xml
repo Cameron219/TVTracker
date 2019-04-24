@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -57,6 +57,7 @@
                     android:layout_height="0dp"
                     android:scaleType="centerCrop"
                     android:adjustViewBounds="true"
+                    android:src="@drawable/episode_blank"
                     android:contentDescription="@string/episode_image"
                     app:layout_constraintDimensionRatio="16:9"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -90,5 +91,12 @@
         </LinearLayout>
     </ScrollView>
 
-
-</android.support.constraint.ConstraintLayout>
+    <ProgressBar
+        android:id="@+id/spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyle"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:visibility="gone"/>
+</FrameLayout>

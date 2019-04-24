@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private ArrayList<Series> results;
     private final TVDB_API API = TVDB_API.getInstance();
     private int series_id = -1;
+    private ProgressBar spinner;
 
     private ArrayList<AsyncTask> task_queue;
     private DatabaseHelper db;
@@ -63,6 +65,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         task_queue = new ArrayList<>();
         input_search = findViewById(R.id.input_search);
+        spinner = findViewById(R.id.search_spinner);
         Button btn_search = findViewById(R.id.btn_search);
 
         btn_search.setOnClickListener(this);
@@ -94,8 +97,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private void search() {
         clear_task_queue();
         String search_term = input_search.getText().toString();
-        // TODO: Check if token is present (and validate it? maybe.)
-        AsyncTask search_task = API.search_for_series(search_term, this);
+        AsyncTask search_task = API.search_for_series(search_term, this, spinner);
         task_queue.add(search_task);
     }
 
@@ -137,15 +139,25 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void update_banner(Banner banner) {
-        ImageView img = findViewById(banner.get_id());
-        if(img == null) {
-            Log.e("BANNER", "Unable to find ImageView for show " + banner.get_id());
-        } else {
-            if(banner.get_banner() != null) {
-                img.setImageBitmap(banner.get_banner());
-                //img.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        if(banner.get_banner() != null) {
+            for(int i = 0; i < results.size(); i++) {
+                Series series = results.get(i);
+                if(series.get_id() == banner.get_id()) {
+                    series.set_banner_image(banner.get_banner());
+                    adapter.notifyItemChanged(i);
+                }
             }
         }
+
+//        ImageView img = findViewById(banner.get_id());
+//        if(img == null) {
+//            Log.e("BANNER", "Unable to find ImageView for show " + banner.get_id());
+//        } else {
+//            if(banner.get_banner() != null) {
+//                img.setImageBitmap(banner.get_banner());
+//                //img.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//            }
+//        }
     }
 
     @Override
@@ -181,8 +193,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void add_series(Series series) {
+        clear_task_queue();
         series_id = series.get_id();
-        API.get_poster(series.get_id(), series.get_slug());
-        API.get_series(series.get_id(), SearchActivity.this);
+        API.get_poster(series.get_id(), series.get_slug(), spinner);
+        API.get_series(series.get_id(), SearchActivity.this, spinner);
     }
 }

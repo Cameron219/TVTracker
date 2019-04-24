@@ -2,6 +2,8 @@ package uk.ac.abertay.tvtracker.TheTVDB;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,21 +15,37 @@ import java.net.URL;
 
 import uk.ac.abertay.tvtracker.SearchActivity;
 
+/**
+ * Task to fetch Series data from the TVDB API
+ */
 class SeriesTask extends AsyncTask<String, Void, Response> {
-    public ResponseInterface callback = null; //TODO: Make private and use setter
-    private final ProgressDialog dialog;
-    //TODO: Replace with spinner
+    private ResponseInterface callback = null;
+    private ProgressBar spinner;
 
-    public SeriesTask(SearchActivity activity) {
-        dialog = new ProgressDialog(activity);
+    /**
+     * Spinner from the activity
+     * @param spinner
+     */
+    public SeriesTask(ProgressBar spinner) {
+        this.spinner = spinner;
     }
 
+    /**
+     * Show the progressbar spinner
+     */
     @Override
     protected void onPreExecute() {
-        dialog.setMessage("Downloading Series, please wait.");
-        dialog.show();
+        spinner.setVisibility(View.VISIBLE);
+        super.onPreExecute();
     }
 
+    /**
+     * Async method for fetching series data
+     * parmas[0] = JWT Token for API
+     * params[1] = API URL for series data
+     * @param params Parameters
+     * @return Response
+     */
     @Override
     protected Response doInBackground(String... params) {
         URL url;
@@ -59,15 +77,26 @@ class SeriesTask extends AsyncTask<String, Void, Response> {
         return resp;
     }
 
+    /**
+     * Hide the progress bar spinner
+     * Callback to API with series data
+     * @param response
+     */
     protected void onPostExecute(Response response) {
-        if(dialog.isShowing()) {
-            dialog.dismiss();
-        }
+        spinner.setVisibility(View.GONE);
         try {
             JSONObject series = new JSONObject(response.get_response());
             callback.insert_series(series.getJSONObject("data"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Set the callback
+     * @param callback callback
+     */
+    public void set_callback(ResponseInterface callback) {
+        this.callback = callback;
     }
 }

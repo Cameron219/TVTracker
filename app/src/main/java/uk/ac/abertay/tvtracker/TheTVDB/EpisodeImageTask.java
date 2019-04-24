@@ -3,6 +3,8 @@ package uk.ac.abertay.tvtracker.TheTVDB;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,9 +14,29 @@ import java.net.URL;
 
 import uk.ac.abertay.tvtracker.FileHandler;
 
+/**
+ * AsyncTask to fetch the image of an episode
+ */
 class EpisodeImageTask extends AsyncTask<String, Void, Bitmap> {
-    public ResponseInterface callback = null;
+    private ResponseInterface callback = null;
+    private ProgressBar spinner;
 
+    public EpisodeImageTask(ProgressBar spinner) {
+        this.spinner = spinner;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        spinner.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * The Async method for EpisodeImageTask
+     * Param[0] = Full URL of the episode image
+     * Param[1] = Path to save episode image to
+     * @param params Parameters
+     * @return Episode Image Bitmap, null if no episode image found
+     */
     @Override
     protected Bitmap doInBackground(String... params) {
         URL url;
@@ -49,8 +71,22 @@ class EpisodeImageTask extends AsyncTask<String, Void, Bitmap> {
         return image;
     }
 
+    /**
+     * Called when doInBackground is done
+     * Callback to calling class (TVDB_API)
+     * @param image Bitmap image
+     */
     @Override
     protected void onPostExecute(Bitmap image) {
+        spinner.setVisibility(View.GONE);
         callback.show_image(image);
+    }
+
+    /**
+     * Set the callback class (TVDB_API)
+     * @param callback Callback
+     */
+    public void set_callback(ResponseInterface callback) {
+        this.callback = callback;
     }
 }

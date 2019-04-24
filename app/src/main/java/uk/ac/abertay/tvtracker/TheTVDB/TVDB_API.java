@@ -3,6 +3,7 @@ package uk.ac.abertay.tvtracker.TheTVDB;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import uk.ac.abertay.tvtracker.BuildConfig;
 import uk.ac.abertay.tvtracker.EpisodeActivity;
@@ -75,13 +76,13 @@ public class TVDB_API implements ResponseInterface {
      */
     private void fetch_jwt_token() {
         TokenTask task = new TokenTask();
-        task.callback = this;
+        task.set_callback(this);
         task.execute(API_URL + "login", API_KEY, USER_KEY, USERNAME);
 
         if(last_search_term != null) {
-            SearchTask s_task = new SearchTask();
-            s_task.callback = this;
-            s_task.execute(JWT_Token, API_URL + "search/series?name=" + last_search_term);
+            //SearchTask s_task = new SearchTask();
+            //s_task.set_callback(this);
+            //s_task.execute(JWT_Token, API_URL + "search/series?name=" + last_search_term);
         }
     }
 
@@ -124,12 +125,12 @@ public class TVDB_API implements ResponseInterface {
      * @param search_actitivy Search Activity instance
      * @return ASyncTask performing the search.
      */
-    public AsyncTask search_for_series(String search_term, SearchActivity search_actitivy) {
+    public AsyncTask search_for_series(String search_term, SearchActivity search_actitivy, ProgressBar spinner) {
         if(!is_token_set()) fetch_jwt_token();
         this.search_activity = search_actitivy;
 
-        SearchTask task = new SearchTask();
-        task.callback = this;
+        SearchTask task = new SearchTask(spinner);
+        task.set_callback(this);
         task.execute(JWT_Token, API_URL + "search/series?name=" + search_term);
 
         return task;
@@ -154,9 +155,8 @@ public class TVDB_API implements ResponseInterface {
      * @param slug Slug of the series. The poster is then saved as {slug}.png
      * @return The ASyncTask PosterTask
      */
-    public AsyncTask get_poster(int id, String slug) {
-        PosterTask task = new PosterTask();
-        task.callback = this;
+    public AsyncTask get_poster(int id, String slug, ProgressBar spinner) {
+        PosterTask task = new PosterTask(spinner);
         task.execute(JWT_Token, API_URL + "series/" + id + "/images/query?keyType=poster", "" + id, slug);
 
         return task;
@@ -167,10 +167,10 @@ public class TVDB_API implements ResponseInterface {
      * @param series_id ID of the series
      * @param search_activity
      */
-    public void get_series(int series_id, SearchActivity search_activity) {
+    public void get_series(int series_id, SearchActivity search_activity, ProgressBar spinner) {
         this.search_activity = search_activity;
-        SeriesTask task = new SeriesTask(search_activity);
-        task.callback = this;
+        SeriesTask task = new SeriesTask(spinner);
+        task.set_callback(this);
         task.execute(JWT_Token, API_URL + "series/" + series_id);
     }
 
@@ -189,10 +189,10 @@ public class TVDB_API implements ResponseInterface {
      * @param series_id ID of the series
      * @param series_activity Activity his method was called for.
      */
-    public void get_episodes(int series_id, SeriesActivity series_activity) {
+    public void get_episodes(int series_id, SeriesActivity series_activity, ProgressBar spinner) {
         this.series_activity = series_activity;
-        EpisodeTask task = new EpisodeTask();
-        task.callback = this;
+        EpisodeTask task = new EpisodeTask(spinner);
+        task.set_callback(this);
         task.execute(JWT_Token, API_URL + "series/" + series_id + "/episodes");
     }
 
@@ -215,7 +215,7 @@ public class TVDB_API implements ResponseInterface {
     public AsyncTask get_banner(String path, int id, SearchActivity search_actitivy) {
         this.search_activity = search_actitivy;
         BannerTask task = new BannerTask();
-        task.callback = this;
+        task.set_callback(this);
         task.execute(path, "" + id);
 
         return task;
@@ -234,10 +234,10 @@ public class TVDB_API implements ResponseInterface {
      * @param filename Name / path of the file
      * @param episode_activity Activity called from.
      */
-    public void get_image(String filename, EpisodeActivity episode_activity) {
+    public void get_image(String filename, EpisodeActivity episode_activity, ProgressBar spinner) {
         this.episode_activity = episode_activity;
-        EpisodeImageTask task = new EpisodeImageTask();
-        task.callback = this;
+        EpisodeImageTask task = new EpisodeImageTask(spinner);
+        task.set_callback(this);
         task.execute("https://www.thetvdb.com/banners/" + filename, filename);
     }
 

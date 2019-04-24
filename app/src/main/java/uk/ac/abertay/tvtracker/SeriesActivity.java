@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import uk.ac.abertay.tvtracker.TheTVDB.TVDB_API;
 
 public class SeriesActivity extends AppCompatActivity {
     private Series series;
+    private ProgressBar spinner;
     private ImageView poster;
     private TextView overview;
     private DatabaseHelper db;
@@ -39,10 +41,11 @@ public class SeriesActivity extends AppCompatActivity {
         Bundle data = intent.getExtras();
 
         int series_id = data.getInt("series_id");
+        spinner = findViewById(R.id.spinner);
 
         if(intent.hasExtra("fetch_episodes")) {
             Toast.makeText(this, "Fetching episode information", Toast.LENGTH_LONG).show();
-            API.get_episodes(series_id, this);
+            API.get_episodes(series_id, this, spinner);
         }
 
         db = new DatabaseHelper(this);

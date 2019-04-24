@@ -52,7 +52,6 @@ public class SeriesInfoFragment extends Fragment {
         overview.setMovementMethod(new ScrollingMovementMethod());
 
         if(series != null) {
-            //getSupportActionBar().setTitle(series.get_name()); TODO: Fix this, allow fragment to talk to activity
             overview.setText(series.get_overview().equals("null") ? getActivity().getString(R.string.no_description) : series.get_overview());
             Bitmap bp = series.get_poster();
             if(bp != null) poster.setImageBitmap(bp);

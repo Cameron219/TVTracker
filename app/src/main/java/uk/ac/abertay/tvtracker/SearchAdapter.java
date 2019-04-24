@@ -29,7 +29,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Series series = results.get(position);
-        holder.banner.setId(series.get_id());
+//        holder.banner.setId(series.get_id());
+        if(series.get_banner_image() != null) {
+            holder.banner.setImageBitmap(series.get_banner_image());
+        } else {
+            holder.banner.setImageDrawable(null);
+        }
         holder.name.setText(series.get_name());
         holder.overview.setText(series.get_overview());
     }
@@ -58,6 +63,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 click_listener.onItemClick(view, getAdapterPosition());
             }
         }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     public Series get_result(int id) {

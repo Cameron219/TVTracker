@@ -26,6 +26,7 @@ public class Series implements Serializable {
     private String airsTime = "";
     private String runtime = "";
     private Episode next_episode = null;
+    private Bitmap banner_image = null;
 
     Series(Cursor data) {
         this.id = data.getInt(0);
@@ -132,6 +133,10 @@ public class Series implements Serializable {
         this.runtime = runtime;
     }
 
+    public void set_banner_image(Bitmap bp) {
+        this.banner_image = bp;
+    }
+
     public String get_airstime() {
         return this.airsTime;
     }
@@ -206,5 +211,9 @@ public class Series implements Serializable {
 
     public void set_next_episode(Episode episode) {
         this.next_episode = episode;
+    }
+
+    public Bitmap get_banner_image() {
+        return this.banner_image;
     }
 }

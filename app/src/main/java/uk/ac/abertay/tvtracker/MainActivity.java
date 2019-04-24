@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void check_if_empty() {
-        //TODO: Add button to empty view screen that opens up search page
         if(series_list.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             empty_view.setVisibility(View.VISIBLE);

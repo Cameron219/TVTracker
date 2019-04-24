@@ -11,9 +11,21 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Task for fetching the JWT Token needed for API usage
+ */
 class TokenTask extends AsyncTask<String, Void, Response> {
-    public ResponseInterface callback = null; //TODO: Make private and use a setter
+    private ResponseInterface callback = null;
 
+    /**
+     * Fetch the JWT Token for API usage
+     * params[0] = API URL for JWT Token call
+     * params[1] = API KEY
+     * params[2] = USER KEY
+     * params[3] = USERNAME
+     * @param params Paramters
+     * @return Response
+     */
     @Override
     protected Response doInBackground(String... params) {
         URL url;
@@ -57,9 +69,20 @@ class TokenTask extends AsyncTask<String, Void, Response> {
         return resp;
     }
 
+    /**
+     * Pass the token back to the API
+     * @param response Response
+     */
     protected void onPostExecute(Response response) {
-        // TODO: Return raw token (as opposed to the entire response)
         callback.set_token(response);
+    }
+
+    /**
+     * Set the callback
+     * @param callback Callback
+     */
+    public void set_callback(ResponseInterface callback) {
+        this.callback = callback;
     }
 }
 

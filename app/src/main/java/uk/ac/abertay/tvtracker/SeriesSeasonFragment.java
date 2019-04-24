@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -21,17 +24,26 @@ public class SeriesSeasonFragment extends Fragment implements SeasonAdapter.Item
     private int series_id;
     private String series_name;
     private RecyclerView recycler_view;
-    private ProgressBar spinner;
+    private TextView no_seasons;
     private SeasonAdapter adapter;
     private DatabaseHelper db;
     private ArrayList<Season> seasons;
 
-
+    /**
+     * Required empty constructor
+     */
     public SeriesSeasonFragment() {
 
     }
 
 
+    /**
+     * Initialize the fragment
+     * @param inflater Inflater
+     * @param container Container
+     * @param savedInstanceState Saved Instance State
+     * @return Fragment View
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_series_season, container, false);
@@ -47,7 +59,7 @@ public class SeriesSeasonFragment extends Fragment implements SeasonAdapter.Item
         seasons = db.get_seasons(series_id);
 
         recycler_view = view.findViewById(R.id.recycler_seasons);
-        spinner = view.findViewById(R.id.spinner);
+        no_seasons = view.findViewById(R.id.no_seasons);
         recycler_view.setHasFixedSize(true);
 
         RecyclerView.LayoutManager layout_manager = new LinearLayoutManager(getActivity());
@@ -57,7 +69,7 @@ public class SeriesSeasonFragment extends Fragment implements SeasonAdapter.Item
         adapter.set_click_listener(this);
         recycler_view.setAdapter(adapter);
 
-        toggle_spinner();
+        toggle_view();
 
         return view;
     }
@@ -84,15 +96,15 @@ public class SeriesSeasonFragment extends Fragment implements SeasonAdapter.Item
         seasons.addAll(new_list);
         adapter.notifyDataSetChanged();
 
-        toggle_spinner();
+        toggle_view();
     }
 
-    private void toggle_spinner() {
+    private void toggle_view() {
         if(adapter.getItemCount() == 0) {
-            spinner.setVisibility(View.VISIBLE);
+            no_seasons.setVisibility(View.VISIBLE);
             recycler_view.setVisibility(View.INVISIBLE);
         } else {
-            spinner.setVisibility(View.INVISIBLE);
+            no_seasons.setVisibility(View.INVISIBLE);
             recycler_view.setVisibility(View.VISIBLE);
         }
     }

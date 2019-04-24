@@ -9,27 +9,38 @@ import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import uk.ac.abertay.tvtracker.TheTVDB.TVDB_API;
 
+/**
+ * Activity that shows Episode information
+ */
 public class EpisodeActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
+    // Private variables
     private int episode_id;
     private String series_name;
     private Series series;
     private Episode episode;
     private DatabaseHelper db;
 
+    // View elements
     private TextView episode_name;
     private TextView episode_date;
     private TextView episode_network;
     private ImageView episode_image;
     private CheckBox episode_watched;
     private TextView episode_overview;
+    private ProgressBar spinner;
 
     private final TVDB_API API = TVDB_API.getInstance();
 
+    /**
+     * Initializes activity
+     * @param savedInstanceState Saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +52,7 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
         episode_image = findViewById(R.id.episode_image);
         episode_watched = findViewById(R.id.episode_watched);
         episode_overview = findViewById(R.id.episode_overview);
+        spinner = findViewById(R.id.spinner);
 
         episode_watched.setOnCheckedChangeListener(this);
 
@@ -58,11 +70,16 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
             set_up_toolbar();
             show_episode_details();
         } else {
+            // Shouldn't ever happen
             Toast.makeText(this, "Episode doesn't exist", Toast.LENGTH_LONG).show();
             finish();
         }
     }
 
+    /**
+     * Initialize the toolbar
+     * Sets the title, as well displays back button
+     */
     private void set_up_toolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -88,7 +105,7 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
         //TODO: Insert placeholder image when no image is available
         Bitmap image = episode.get_image();
         if(image == null) { // No local file exists, fetch image from TVDB
-            API.get_image(episode.get_file_name(), this);
+            API.get_image(episode.get_file_name(), this, spinner);
         } else { // Local image exists, show it
             episode_image.setImageBitmap(image);
         }
@@ -117,6 +134,8 @@ public class EpisodeActivity extends AppCompatActivity implements CompoundButton
     }
 
     public void update_image(Bitmap image) {
-        episode_image.setImageBitmap(image);
+        if(image != null){
+            episode_image.setImageBitmap(image);
+        }
     }
 }
