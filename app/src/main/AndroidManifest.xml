@@ -37,7 +37,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uk.ac.abertay.tvtracker.MainActivity" />
         </activity>
-        <activity android:name=".SeriesActivity">
+        <activity android:name=".SeriesActivity"
+            android:configChanges="orientation">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uk.ac.abertay.tvtracker.MainActivity" />

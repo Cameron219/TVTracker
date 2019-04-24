@@ -18,9 +18,24 @@ import android.widget.TextView;
  * A simple {@link Fragment} subclass.
  */
 public class SeriesInfoFragment extends Fragment {
-    private DatabaseHelper db;
-    private LinearLayout info_layout;
     private Series series;
+
+    private ImageView poster;
+    private TextView overview;
+
+    private TextView status_title;
+    private TextView network_title;
+    private TextView first_aired_title;
+    private TextView content_rating_title;
+    private TextView tvdb_rating_title;
+
+    private TextView status;
+    private TextView network;
+    private TextView first_aired;
+    private TextView content_rating;
+    private TextView tvdb_rating;
+
+
 
 
     public SeriesInfoFragment() {
@@ -34,7 +49,7 @@ public class SeriesInfoFragment extends Fragment {
         Bundle args = getArguments();
 
         int series_id = args.getInt("series_id");
-        Series series = new Series(series_id);
+        series = new Series(series_id);
         series.set_name(args.getString("name"));
         series.set_poster(args.getString("poster"));
         series.set_status(args.getString("status"));
@@ -44,50 +59,65 @@ public class SeriesInfoFragment extends Fragment {
         series.set_site_rating(args.getDouble("site_rating"));
         series.set_overview(args.getString("overview"));
 
+        status_title = view.findViewById(R.id.episode_status_title);
+        network_title = view.findViewById(R.id.episode_network_title);
+        first_aired_title = view.findViewById(R.id.episode_first_aired_title);
+        content_rating_title = view.findViewById(R.id.episode_content_rating_title);
+        tvdb_rating_title = view.findViewById(R.id.episode_tvdb_rating_title);
 
-        info_layout = view.findViewById(R.id.info_layout);
-        //TODO: Insert placeholder image when no poster is available
-        ImageView poster = view.findViewById(R.id.series_poster);
-        TextView overview = view.findViewById(R.id.series_overview);
-        overview.setMovementMethod(new ScrollingMovementMethod());
+        status = view.findViewById(R.id.episode_status);
+        network = view.findViewById(R.id.episode_network);
+        first_aired = view.findViewById(R.id.episode_first_aired);
+        content_rating = view.findViewById(R.id.episode_content_rating);
+        tvdb_rating = view.findViewById(R.id.episode_tvdb_rating);
 
-        if(series != null) {
-            overview.setText(series.get_overview().equals("null") ? getActivity().getString(R.string.no_description) : series.get_overview());
-            Bitmap bp = series.get_poster();
-            if(bp != null) poster.setImageBitmap(bp);
-            if(!series.get_status().isEmpty()) {
-                add_info("Status", series.get_status());
-            }
-            if(!series.get_network().isEmpty()) {
-                add_info("Network", series.get_network());
-            }
-            if(!series.get_first_aired().isEmpty()) {
-                add_info("First Aired", series.get_first_aired());
-            }
-            if(!series.get_content_rating().isEmpty()) {
-                add_info("Content Rating", series.get_content_rating());
-            }
-            if(series.get_site_rating() > 0) {
-                add_info("TVDB Rating", series.get_site_rating() + " / 10");
-            }
-        } else {
-            Log.e("SERIES", "Series " + series_id + " doesn't exist");
-        }
+        poster = view.findViewById(R.id.series_poster);
+        overview = view.findViewById(R.id.series_overview);
+
+        set_info();
 
         return view;
     }
 
-    //TODO: Move this over to XML
-    private void add_info(String txt_title, String txt_value) {
-        TextView title = new TextView(getActivity());
-        title.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        title.setText(txt_title);
-        title.setTextAppearance(R.style.TextAppearance_AppCompat_Subhead);
-        info_layout.addView(title);
+    private void set_info() {
+        overview.setText(series.get_overview().equals("null") ? getActivity().getString(R.string.no_description) : series.get_overview());
+        overview.setMovementMethod(new ScrollingMovementMethod());
+        Bitmap bp = series.get_poster();
+        if(bp != null) poster.setImageBitmap(bp);
 
-        TextView value = new TextView(getActivity());
-        value.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        value.setText(txt_value);
-        info_layout.addView(value);
+        if(series.get_status().isEmpty()) {
+            status_title.setVisibility(View.GONE);
+            status.setVisibility(View.GONE);
+        } else {
+            status.setText(series.get_status());
+        }
+
+        if(series.get_network().isEmpty()) {
+            network_title.setVisibility(View.GONE);
+            network.setVisibility(View.GONE);
+        } else {
+            network.setText(series.get_network());
+        }
+
+        if(series.get_first_aired().isEmpty()) {
+            first_aired_title.setVisibility(View.GONE);
+            first_aired.setVisibility(View.GONE);
+        } else {
+            first_aired.setText(series.get_first_aired());
+        }
+
+        if(series.get_content_rating().isEmpty()) {
+            content_rating_title.setVisibility(View.GONE);
+            content_rating.setVisibility(View.GONE);
+        } else {
+            content_rating.setText(series.get_content_rating());
+        }
+
+        if(series.get_site_rating() == 0) {
+            tvdb_rating_title.setVisibility(View.GONE);
+            tvdb_rating.setVisibility(View.GONE);
+        } else {
+            tvdb_rating.setText(series.get_site_rating() + " / 10");
+        }
     }
 }

@@ -36,6 +36,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private final TVDB_API API = TVDB_API.getInstance();
     private int series_id = -1;
     private ProgressBar spinner;
+    private RecyclerView.LayoutManager layout_manager;
 
     private ArrayList<AsyncTask> task_queue;
     private DatabaseHelper db;
@@ -56,7 +57,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         RecyclerView recycler_view = findViewById(R.id.recycler_search);
 
-        RecyclerView.LayoutManager layout_manager = new LinearLayoutManager(this);
+        layout_manager = new LinearLayoutManager(this);
         recycler_view.setLayoutManager(layout_manager);
 
         adapter = new SearchAdapter(this, results);
@@ -96,6 +97,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private void search() {
         clear_task_queue();
+        layout_manager.scrollToPosition(0);
         String search_term = input_search.getText().toString();
         AsyncTask search_task = API.search_for_series(search_term, this, spinner);
         task_queue.add(search_task);

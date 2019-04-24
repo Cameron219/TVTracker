@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textColor="@android:color/black"
-        android:text="No episodes to show yet"
+        android:text="@string/no_episodes_to_show"
         android:textSize="24dp"
         />
 
